@@ -1,0 +1,41 @@
+# LexiTrace Phase 1 config.
+# Keep these FIXED across all experimental conditions so comparisons are fair.
+# Any change to a prompt or model changes the prompt hash logged in every output.
+
+asr:
+  model: large-v3          # faster-whisper model size (try "small" for quick tests)
+  device: auto             # auto | cpu | cuda
+  compute_type: default    # default | int8 | float16
+  language: en
+  beam_size: 5
+
+llm:
+  model: claude-sonnet-5-5 # change here if you use another model
+  temperature: 0           # set to null to omit if your model rejects it
+  max_tokens: 4000
+  chunk_words: 1200        # transcript is split into chunks so concepts stay traceable
+
+target_languages:
+  ur: Urdu
+  ks: Kashmiri (Perso-Arabic script)
+  hi: Hindi
+  kn: Kannada
+
+# BASELINE prompts are deliberately NEUTRAL:
+#  - no instruction to fix ASR errors (we want to measure implicit recovery)
+#  - no instruction about how to handle technical terms (that is an intervention for Phase 3)
+prompts:
+  summarise: |
+    You are given a segment of a lecture transcript. Write concise study notes
+    for a student, in English, as short bullet points covering the main ideas.
+    Output only the notes.
+
+    Transcript segment:
+    {text}
+
+  translate: |
+    Translate the following study notes into {language}. Keep the bullet
+    structure. Output only the translation.
+
+    Notes:
+    {text}

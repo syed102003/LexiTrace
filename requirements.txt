@@ -1,0 +1,4 @@
+faster-whisper
+anthropic
+pyyaml
+yt-dlp
