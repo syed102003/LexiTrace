@@ -1,4 +1,7 @@
 faster-whisper
-anthropic
+transformers
+torch
+sentencepiece
+accelerate
 pyyaml
 yt-dlp

@@ -1,29 +1,45 @@
-# LexiTrace Phase 1 config.
-# Keep these FIXED across all experimental conditions so comparisons are fair.
-# Any change to a prompt or model changes the prompt hash logged in every output.
+# LexiTrace Phase 1 configuration.
+# Freeze these settings before running controlled Phase 2 experiments.
+# Keep the same models, prompts, chunking and generation settings across conditions.
 
 asr:
-  model: large-v3          # faster-whisper model size (try "small" for quick tests)
-  device: auto             # auto | cpu | cuda
-  compute_type: default    # default | int8 | float16
+  model: large-v3
+  device: auto
+  compute_type: default
   language: en
   beam_size: 5
 
-llm:
-  model: claude-sonnet-5-5 # change here if you use another model
-  temperature: 0           # set to null to omit if your model rejects it
-  max_tokens: 4000
-  chunk_words: 1200        # transcript is split into chunks so concepts stay traceable
+summarisation:
+  model: google/flan-t5-base
+  device: auto
+  max_input_tokens: 512
+  max_new_tokens: 256
+  chunk_words: 180
+
+translation:
+  model: facebook/nllb-200-distilled-600M
+  device: auto
+  source_language_code: eng_Latn
+  max_input_tokens: 512
+  max_new_tokens: 512
 
 target_languages:
-  ur: Urdu
-  ks: Kashmiri (Perso-Arabic script)
-  hi: Hindi
-  kn: Kannada
+  ur:
+    name: Urdu
+    code: urd_Arab
+  ks:
+    name: Kashmiri (Perso-Arabic script)
+    code: kas_Arab
+  hi:
+    name: Hindi
+    code: hin_Deva
+  kn:
+    name: Kannada
+    code: kan_Knda
 
 # BASELINE prompts are deliberately NEUTRAL:
-#  - no instruction to fix ASR errors (we want to measure implicit recovery)
-#  - no instruction about how to handle technical terms (that is an intervention for Phase 3)
+# - no instruction to fix ASR errors (we want to measure implicit recovery)
+# - no instruction about how to handle technical terms (that is a later intervention)
 prompts:
   summarise: |
     You are given a segment of a lecture transcript. Write concise study notes
@@ -31,11 +47,4 @@ prompts:
     Output only the notes.
 
     Transcript segment:
-    {text}
-
-  translate: |
-    Translate the following study notes into {language}. Keep the bullet
-    structure. Output only the translation.
-
-    Notes:
     {text}
