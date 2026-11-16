@@ -1,0 +1,8268 @@
+{
+  "meta": {
+    "stage": "asr",
+    "model": "large-v3",
+    "language": "en",
+    "condition": "asr_natural",
+    "time": "2026-11-15 16:11:43"
+  },
+  "text": "Welcome back! In the last video, we saw visualizations of the cost function j and how you can try different choices of the parameters w and b and see what cost value that gets you. It would be nice if we had a more systematic way to find the values of w and b that result in the smallest possible cost j of w . It turns out there's an algorithm called Gradient Descent that you can use to do that. Gradient Descent is used all over the place in machine learning, not just for linear regression but for training, for example, some of the most advanced neural network models, also called deep learning models. Deep learning models are something you learn about in the second course. So learning this tool of Gradient Descent will set you up with one of the most important building blocks in machine learning. Here's an overview of what we'll do with Gradient Descent. You have the cost function j of w right here that you want to minimize. In the example we've seen so far, this is a cost function for linear regression, but it turns out that Gradient Descent is an algorithm that you can use to try to minimize any function, not just a cost function for linear regression. Just to make this discussion on Gradient Descent more general, let's take a look at the cost function of gradient descent. It turns out that gradient descent applies to more general functions, including other cost functions that work with models that have more than two parameters. So for instance, if you have a cost function j as a function of w1, w2, up to wn and b, your objective is to minimize j over the parameters w1 to wn and b. In other words, you want to pick values for w1 through wn and b that gives you the smallest possible value of j. It turns out that gradient descent is an algorithm that you can apply to try to minimize this cost function j as well. What you're going to do is just start off with some initial guesses for w and b. In linear regression, it won't matter too much what the initial values are, so a common choice is to set them both to zero. So, for example, you can set w to zero and b to zero as the initial guess. With the gradient descent algorithm, what you're going to do is you'll keep on changing the parameters w and b a bit every time to try to reduce the cost j of wb until hopefully j settles at or near a minimum. One thing I should note is that for some functions j that may not be a bow shape or a hammock shape, it is possible for there to be more than one possible minimum. Let's take a look at an example of a more complex surface plot j to see what gradient descent is doing. This function is not a squared error cost function. For linear regression with the squared error cost function, you always end up with a bow shape or a hammock shape. But this function is not a squared error cost function. For linear regression, this is a type of cost function you might get if you're training a neural network model. Notice the axes. That is w and b on the bottom axes. For different values of w and b, you get different points on this surface j of wb, where the height of the surface at some point is the value of the cost function. Now, let's imagine that this surface plot is actually a view of a slightly hilly outdoor park or a golf course, where the high points are hills and the low points are valleys like so. And I'd like you to imagine, if you will, that you're physically standing at this point on the hill. And if it helps you to relax, imagine that there's lots of nice green grass and butterflies and flowers. It's a really nice hill. And your goal is to start up here and once you're there, you get to the bottom of one of these valleys as efficiently as possible. So, what The Gradient-Descent Árabe does is you're going to spin around 360 degrees and look around and ask yourself, if I were to take a tiny little baby step in one direction, and I want to go downhill as quickly as possible toward one of these valleys, what direction do I choose to take that baby step? Well, if you want to walk down a hill in this direction, it's actually quite easy and it can't be this hill as efficiently as possible it turns out that if you're standing at this point in the hill and you look around you may notice that the best direction to take your next step downhill is roughly that direction mathematically this is the direction of steepest descent and it means that when you take a tiny baby little step this takes you downhill faster than a tiny little baby step you could have taken in any other direction so after taking this first step you're now at this point on the hill over here now let's repeat the process standing at this new point you're going to again spin around 360 degrees and ask yourself in what direction would i take the next little baby step in order to move downhill and if you do that and take another step you end up moving a bit in that direction and you can keep going from this new point you can again look around and decide what direction would take you downhill most quickly take another step another step and so on until you find yourself at the bottom of this valley at this local minimum right here what you just did was go through multiple steps of gradient descent it turns out gradient descent has an interesting property remember that you can choose a starting point at the surface by choosing starting values with parameters w and b when you perform gradient descent a moment ago you have started at this point over here right now imagine if you try gradient descent again but this time you choose a different starting point by choosing parameters that place your starting point just a couple steps to the right over here if you then repeat the gradient descent again descent process, which means you look around, take a little step in the direction of the steepest descent, so you end up here. Then you again look around, take another step, and so on. And if you were to run gradient descent the second time, starting just a couple steps to the right of where we did it the first time, then you would end up in a totally different valley, this different minimum over here on the right. The bottoms of both the first and the second valleys are called local minima, because if you start going down the first valley, gradient descent won't lead you to the second valley. And the same is true if you started going down the second valley, you would stay in that second minimum and not find your way into the first local minimum. So this is an interesting property of the gradient descent process. So in this video, you saw how gradient descent helps you go downhill. In the next video, let's look at the mathematical expressions that you can implement to make gradient descent work. Let's go on to the next video.",
+  "segments": [
+    {
+      "id": 1,
+      "start": 1.04,
+      "end": 6.22,
+      "text": "Welcome back! In the last video, we saw visualizations of the cost function j",
+      "words": [
+        {
+          "w": " Welcome",
+          "start": 1.04,
+          "end": 1.52,
+          "p": 0.868
+        },
+        {
+          "w": " back!",
+          "start": 1.52,
+          "end": 1.86,
+          "p": 0.992
+        },
+        {
+          "w": " In",
+          "start": 2.1,
+          "end": 2.6,
+          "p": 0.992
+        },
+        {
+          "w": " the",
+          "start": 2.6,
+          "end": 2.76,
+          "p": 0.996
+        },
+        {
+          "w": " last",
+          "start": 2.76,
+          "end": 2.98,
+          "p": 0.999
+        },
+        {
+          "w": " video,",
+          "start": 2.98,
+          "end": 3.32,
+          "p": 0.998
+        },
+        {
+          "w": " we",
+          "start": 3.44,
+          "end": 3.58,
+          "p": 0.998
+        },
+        {
+          "w": " saw",
+          "start": 3.58,
+          "end": 3.86,
+          "p": 0.997
+        },
+        {
+          "w": " visualizations",
+          "start": 3.86,
+          "end": 4.76,
+          "p": 0.982
+        },
+        {
+          "w": " of",
+          "start": 4.76,
+          "end": 5.14,
+          "p": 0.997
+        },
+        {
+          "w": " the",
+          "start": 5.14,
+          "end": 5.32,
+          "p": 0.995
+        },
+        {
+          "w": " cost",
+          "start": 5.32,
+          "end": 5.56,
+          "p": 0.935
+        },
+        {
+          "w": " function",
+          "start": 5.56,
+          "end": 5.84,
+          "p": 0.983
+        },
+        {
+          "w": " j",
+          "start": 5.84,
+          "end": 6.22,
+          "p": 0.627
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "start": 6.68,
+      "end": 12.7,
+      "text": "and how you can try different choices of the parameters w and b and see what cost value that",
+      "words": [
+        {
+          "w": " and",
+          "start": 6.68,
+          "end": 6.98,
+          "p": 0.65
+        },
+        {
+          "w": " how",
+          "start": 6.98,
+          "end": 7.4,
+          "p": 0.998
+        },
+        {
+          "w": " you",
+          "start": 7.4,
+          "end": 7.58,
+          "p": 0.996
+        },
+        {
+          "w": " can",
+          "start": 7.58,
+          "end": 7.78,
+          "p": 0.998
+        },
+        {
+          "w": " try",
+          "start": 7.78,
+          "end": 8.08,
+          "p": 0.998
+        },
+        {
+          "w": " different",
+          "start": 8.08,
+          "end": 8.34,
+          "p": 0.998
+        },
+        {
+          "w": " choices",
+          "start": 8.34,
+          "end": 8.92,
+          "p": 0.998
+        },
+        {
+          "w": " of",
+          "start": 8.92,
+          "end": 9.22,
+          "p": 0.725
+        },
+        {
+          "w": " the",
+          "start": 9.22,
+          "end": 9.28,
+          "p": 0.988
+        },
+        {
+          "w": " parameters",
+          "start": 9.28,
+          "end": 9.66,
+          "p": 0.996
+        },
+        {
+          "w": " w",
+          "start": 9.66,
+          "end": 10.12,
+          "p": 0.9
+        },
+        {
+          "w": " and",
+          "start": 10.12,
+          "end": 10.34,
+          "p": 0.995
+        },
+        {
+          "w": " b",
+          "start": 10.34,
+          "end": 10.6,
+          "p": 0.991
+        },
+        {
+          "w": " and",
+          "start": 10.6,
+          "end": 11.24,
+          "p": 0.704
+        },
+        {
+          "w": " see",
+          "start": 11.24,
+          "end": 11.56,
+          "p": 0.998
+        },
+        {
+          "w": " what",
+          "start": 11.56,
+          "end": 11.74,
+          "p": 0.994
+        },
+        {
+          "w": " cost",
+          "start": 11.74,
+          "end": 12.06,
+          "p": 0.988
+        },
+        {
+          "w": " value",
+          "start": 12.06,
+          "end": 12.4,
+          "p": 0.952
+        },
+        {
+          "w": " that",
+          "start": 12.4,
+          "end": 12.7,
+          "p": 0.994
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "start": 12.7,
+      "end": 18.84,
+      "text": "gets you. It would be nice if we had a more systematic way to find the values of w and b",
+      "words": [
+        {
+          "w": " gets",
+          "start": 12.7,
+          "end": 12.96,
+          "p": 0.996
+        },
+        {
+          "w": " you.",
+          "start": 12.96,
+          "end": 13.18,
+          "p": 0.997
+        },
+        {
+          "w": " It",
+          "start": 13.72,
+          "end": 14.18,
+          "p": 0.994
+        },
+        {
+          "w": " would",
+          "start": 14.18,
+          "end": 14.28,
+          "p": 0.999
+        },
+        {
+          "w": " be",
+          "start": 14.28,
+          "end": 14.42,
+          "p": 0.999
+        },
+        {
+          "w": " nice",
+          "start": 14.42,
+          "end": 14.68,
+          "p": 0.999
+        },
+        {
+          "w": " if",
+          "start": 14.68,
+          "end": 14.86,
+          "p": 0.986
+        },
+        {
+          "w": " we",
+          "start": 14.86,
+          "end": 15.04,
+          "p": 0.998
+        },
+        {
+          "w": " had",
+          "start": 15.04,
+          "end": 15.18,
+          "p": 0.994
+        },
+        {
+          "w": " a",
+          "start": 15.18,
+          "end": 15.26,
+          "p": 0.996
+        },
+        {
+          "w": " more",
+          "start": 15.26,
+          "end": 15.42,
+          "p": 0.998
+        },
+        {
+          "w": " systematic",
+          "start": 15.42,
+          "end": 15.84,
+          "p": 0.998
+        },
+        {
+          "w": " way",
+          "start": 15.84,
+          "end": 16.36,
+          "p": 1.0
+        },
+        {
+          "w": " to",
+          "start": 16.36,
+          "end": 16.92,
+          "p": 0.998
+        },
+        {
+          "w": " find",
+          "start": 16.92,
+          "end": 17.26,
+          "p": 0.995
+        },
+        {
+          "w": " the",
+          "start": 17.26,
+          "end": 17.44,
+          "p": 0.999
+        },
+        {
+          "w": " values",
+          "start": 17.44,
+          "end": 17.9,
+          "p": 0.995
+        },
+        {
+          "w": " of",
+          "start": 17.9,
+          "end": 18.16,
+          "p": 0.998
+        },
+        {
+          "w": " w",
+          "start": 18.16,
+          "end": 18.4,
+          "p": 0.989
+        },
+        {
+          "w": " and",
+          "start": 18.4,
+          "end": 18.6,
+          "p": 0.996
+        },
+        {
+          "w": " b",
+          "start": 18.6,
+          "end": 18.84,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "start": 18.84,
+      "end": 25.64,
+      "text": "that result in the smallest possible cost j of w . It turns out there's an algorithm",
+      "words": [
+        {
+          "w": " that",
+          "start": 18.84,
+          "end": 19.46,
+          "p": 0.982
+        },
+        {
+          "w": " result",
+          "start": 19.46,
+          "end": 19.7,
+          "p": 0.954
+        },
+        {
+          "w": " in",
+          "start": 19.7,
+          "end": 20.08,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 20.08,
+          "end": 20.26,
+          "p": 0.998
+        },
+        {
+          "w": " smallest",
+          "start": 20.26,
+          "end": 20.68,
+          "p": 0.998
+        },
+        {
+          "w": " possible",
+          "start": 20.68,
+          "end": 20.98,
+          "p": 0.999
+        },
+        {
+          "w": " cost",
+          "start": 20.98,
+          "end": 21.58,
+          "p": 0.984
+        },
+        {
+          "w": " j",
+          "start": 21.58,
+          "end": 22.04,
+          "p": 0.489
+        },
+        {
+          "w": " of",
+          "start": 22.04,
+          "end": 22.52,
+          "p": 0.718
+        },
+        {
+          "w": " w",
+          "start": 22.52,
+          "end": 22.82,
+          "p": 0.954
+        },
+        {
+          "w": " .",
+          "start": 22.82,
+          "end": 23.14,
+          "p": 0.35
+        },
+        {
+          "w": " It",
+          "start": 23.14,
+          "end": 24.38,
+          "p": 0.988
+        },
+        {
+          "w": " turns",
+          "start": 24.38,
+          "end": 24.68,
+          "p": 1.0
+        },
+        {
+          "w": " out",
+          "start": 24.68,
+          "end": 24.96,
+          "p": 0.999
+        },
+        {
+          "w": " there's",
+          "start": 24.96,
+          "end": 25.22,
+          "p": 0.953
+        },
+        {
+          "w": " an",
+          "start": 25.22,
+          "end": 25.3,
+          "p": 0.998
+        },
+        {
+          "w": " algorithm",
+          "start": 25.3,
+          "end": 25.64,
+          "p": 0.989
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "start": 25.64,
+      "end": 31.82,
+      "text": "called Gradient Descent that you can use to do that. Gradient Descent is used all over the place",
+      "words": [
+        {
+          "w": " called",
+          "start": 25.64,
+          "end": 26.08,
+          "p": 0.797
+        },
+        {
+          "w": " Gradient",
+          "start": 26.08,
+          "end": 26.78,
+          "p": 0.711
+        },
+        {
+          "w": " Descent",
+          "start": 26.78,
+          "end": 27.22,
+          "p": 0.92
+        },
+        {
+          "w": " that",
+          "start": 27.22,
+          "end": 27.56,
+          "p": 0.882
+        },
+        {
+          "w": " you",
+          "start": 27.56,
+          "end": 27.82,
+          "p": 0.999
+        },
+        {
+          "w": " can",
+          "start": 27.82,
+          "end": 27.98,
+          "p": 0.965
+        },
+        {
+          "w": " use",
+          "start": 27.98,
+          "end": 28.32,
+          "p": 0.999
+        },
+        {
+          "w": " to",
+          "start": 28.32,
+          "end": 28.5,
+          "p": 0.989
+        },
+        {
+          "w": " do",
+          "start": 28.5,
+          "end": 28.7,
+          "p": 0.998
+        },
+        {
+          "w": " that.",
+          "start": 28.7,
+          "end": 28.94,
+          "p": 0.999
+        },
+        {
+          "w": " Gradient",
+          "start": 29.34,
+          "end": 29.98,
+          "p": 0.994
+        },
+        {
+          "w": " Descent",
+          "start": 29.98,
+          "end": 30.32,
+          "p": 0.976
+        },
+        {
+          "w": " is",
+          "start": 30.32,
+          "end": 30.5,
+          "p": 0.997
+        },
+        {
+          "w": " used",
+          "start": 30.5,
+          "end": 30.78,
+          "p": 0.996
+        },
+        {
+          "w": " all",
+          "start": 30.78,
+          "end": 31.08,
+          "p": 0.997
+        },
+        {
+          "w": " over",
+          "start": 31.08,
+          "end": 31.48,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 31.48,
+          "end": 31.6,
+          "p": 0.997
+        },
+        {
+          "w": " place",
+          "start": 31.6,
+          "end": 31.82,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "start": 31.82,
+      "end": 36.5,
+      "text": "in machine learning, not just for linear regression but for training, for example,",
+      "words": [
+        {
+          "w": " in",
+          "start": 31.82,
+          "end": 31.98,
+          "p": 0.985
+        },
+        {
+          "w": " machine",
+          "start": 31.98,
+          "end": 32.16,
+          "p": 0.833
+        },
+        {
+          "w": " learning,",
+          "start": 32.16,
+          "end": 32.48,
+          "p": 0.998
+        },
+        {
+          "w": " not",
+          "start": 32.7,
+          "end": 33.18,
+          "p": 0.998
+        },
+        {
+          "w": " just",
+          "start": 33.18,
+          "end": 33.52,
+          "p": 0.999
+        },
+        {
+          "w": " for",
+          "start": 33.52,
+          "end": 33.62,
+          "p": 0.968
+        },
+        {
+          "w": " linear",
+          "start": 33.62,
+          "end": 33.88,
+          "p": 0.987
+        },
+        {
+          "w": " regression",
+          "start": 33.88,
+          "end": 34.18,
+          "p": 0.999
+        },
+        {
+          "w": " but",
+          "start": 34.18,
+          "end": 34.86,
+          "p": 0.228
+        },
+        {
+          "w": " for",
+          "start": 34.86,
+          "end": 35.04,
+          "p": 0.993
+        },
+        {
+          "w": " training,",
+          "start": 35.04,
+          "end": 35.56,
+          "p": 0.999
+        },
+        {
+          "w": " for",
+          "start": 35.62,
+          "end": 35.96,
+          "p": 0.995
+        },
+        {
+          "w": " example,",
+          "start": 35.96,
+          "end": 36.5,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "start": 36.62,
+      "end": 43.58,
+      "text": "some of the most advanced neural network models, also called deep learning models. Deep learning",
+      "words": [
+        {
+          "w": " some",
+          "start": 36.62,
+          "end": 37.16,
+          "p": 0.993
+        },
+        {
+          "w": " of",
+          "start": 37.16,
+          "end": 37.34,
+          "p": 0.997
+        },
+        {
+          "w": " the",
+          "start": 37.34,
+          "end": 37.42,
+          "p": 0.999
+        },
+        {
+          "w": " most",
+          "start": 37.42,
+          "end": 37.7,
+          "p": 0.998
+        },
+        {
+          "w": " advanced",
+          "start": 37.7,
+          "end": 38.1,
+          "p": 0.998
+        },
+        {
+          "w": " neural",
+          "start": 38.1,
+          "end": 38.78,
+          "p": 0.968
+        },
+        {
+          "w": " network",
+          "start": 38.78,
+          "end": 39.14,
+          "p": 0.989
+        },
+        {
+          "w": " models,",
+          "start": 39.14,
+          "end": 39.74,
+          "p": 0.996
+        },
+        {
+          "w": " also",
+          "start": 40.04,
+          "end": 40.6,
+          "p": 0.998
+        },
+        {
+          "w": " called",
+          "start": 40.6,
+          "end": 41.0,
+          "p": 0.997
+        },
+        {
+          "w": " deep",
+          "start": 41.0,
+          "end": 41.36,
+          "p": 0.682
+        },
+        {
+          "w": " learning",
+          "start": 41.36,
+          "end": 41.64,
+          "p": 0.97
+        },
+        {
+          "w": " models.",
+          "start": 41.64,
+          "end": 42.04,
+          "p": 0.995
+        },
+        {
+          "w": " Deep",
+          "start": 42.72,
+          "end": 43.36,
+          "p": 0.996
+        },
+        {
+          "w": " learning",
+          "start": 43.36,
+          "end": 43.58,
+          "p": 0.987
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "start": 43.58,
+      "end": 50.38,
+      "text": "models are something you learn about in the second course. So learning this tool of Gradient Descent",
+      "words": [
+        {
+          "w": " models",
+          "start": 43.58,
+          "end": 43.96,
+          "p": 0.996
+        },
+        {
+          "w": " are",
+          "start": 43.96,
+          "end": 44.46,
+          "p": 0.997
+        },
+        {
+          "w": " something",
+          "start": 44.46,
+          "end": 44.84,
+          "p": 0.997
+        },
+        {
+          "w": " you",
+          "start": 44.84,
+          "end": 45.04,
+          "p": 0.988
+        },
+        {
+          "w": " learn",
+          "start": 45.04,
+          "end": 45.24,
+          "p": 0.913
+        },
+        {
+          "w": " about",
+          "start": 45.24,
+          "end": 45.48,
+          "p": 0.998
+        },
+        {
+          "w": " in",
+          "start": 45.48,
+          "end": 45.9,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 45.9,
+          "end": 46.08,
+          "p": 0.996
+        },
+        {
+          "w": " second",
+          "start": 46.08,
+          "end": 46.44,
+          "p": 0.993
+        },
+        {
+          "w": " course.",
+          "start": 46.44,
+          "end": 46.72,
+          "p": 0.988
+        },
+        {
+          "w": " So",
+          "start": 47.38,
+          "end": 48.02,
+          "p": 0.958
+        },
+        {
+          "w": " learning",
+          "start": 48.02,
+          "end": 48.7,
+          "p": 0.794
+        },
+        {
+          "w": " this",
+          "start": 48.7,
+          "end": 48.92,
+          "p": 0.687
+        },
+        {
+          "w": " tool",
+          "start": 48.92,
+          "end": 49.26,
+          "p": 0.768
+        },
+        {
+          "w": " of",
+          "start": 49.26,
+          "end": 49.74,
+          "p": 0.984
+        },
+        {
+          "w": " Gradient",
+          "start": 49.74,
+          "end": 50.06,
+          "p": 0.814
+        },
+        {
+          "w": " Descent",
+          "start": 50.06,
+          "end": 50.38,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "start": 50.38,
+      "end": 55.56,
+      "text": "will set you up with one of the most important building blocks in machine learning. Here's",
+      "words": [
+        {
+          "w": " will",
+          "start": 50.38,
+          "end": 50.86,
+          "p": 0.981
+        },
+        {
+          "w": " set",
+          "start": 50.86,
+          "end": 51.08,
+          "p": 0.995
+        },
+        {
+          "w": " you",
+          "start": 51.08,
+          "end": 51.24,
+          "p": 0.993
+        },
+        {
+          "w": " up",
+          "start": 51.24,
+          "end": 51.4,
+          "p": 0.999
+        },
+        {
+          "w": " with",
+          "start": 51.4,
+          "end": 51.78,
+          "p": 0.997
+        },
+        {
+          "w": " one",
+          "start": 51.78,
+          "end": 52.02,
+          "p": 0.999
+        },
+        {
+          "w": " of",
+          "start": 52.02,
+          "end": 52.1,
+          "p": 0.998
+        },
+        {
+          "w": " the",
+          "start": 52.1,
+          "end": 52.18,
+          "p": 0.999
+        },
+        {
+          "w": " most",
+          "start": 52.18,
+          "end": 52.36,
+          "p": 0.997
+        },
+        {
+          "w": " important",
+          "start": 52.36,
+          "end": 52.88,
+          "p": 0.999
+        },
+        {
+          "w": " building",
+          "start": 52.88,
+          "end": 53.2,
+          "p": 0.995
+        },
+        {
+          "w": " blocks",
+          "start": 53.2,
+          "end": 53.58,
+          "p": 0.999
+        },
+        {
+          "w": " in",
+          "start": 53.58,
+          "end": 53.98,
+          "p": 0.993
+        },
+        {
+          "w": " machine",
+          "start": 53.98,
+          "end": 54.2,
+          "p": 0.989
+        },
+        {
+          "w": " learning.",
+          "start": 54.2,
+          "end": 54.54,
+          "p": 1.0
+        },
+        {
+          "w": " Here's",
+          "start": 54.92,
+          "end": 55.56,
+          "p": 0.981
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "start": 55.56,
+      "end": 62.14,
+      "text": "an overview of what we'll do with Gradient Descent. You have the cost function j of w right",
+      "words": [
+        {
+          "w": " an",
+          "start": 55.56,
+          "end": 55.64,
+          "p": 0.585
+        },
+        {
+          "w": " overview",
+          "start": 55.64,
+          "end": 56.0,
+          "p": 0.999
+        },
+        {
+          "w": " of",
+          "start": 56.0,
+          "end": 56.38,
+          "p": 0.997
+        },
+        {
+          "w": " what",
+          "start": 56.38,
+          "end": 56.62,
+          "p": 0.998
+        },
+        {
+          "w": " we'll",
+          "start": 56.62,
+          "end": 56.82,
+          "p": 0.986
+        },
+        {
+          "w": " do",
+          "start": 56.82,
+          "end": 57.02,
+          "p": 0.999
+        },
+        {
+          "w": " with",
+          "start": 57.02,
+          "end": 57.38,
+          "p": 0.997
+        },
+        {
+          "w": " Gradient",
+          "start": 57.38,
+          "end": 57.76,
+          "p": 0.505
+        },
+        {
+          "w": " Descent.",
+          "start": 57.76,
+          "end": 58.1,
+          "p": 0.898
+        },
+        {
+          "w": " You",
+          "start": 58.72,
+          "end": 59.4,
+          "p": 0.986
+        },
+        {
+          "w": " have",
+          "start": 59.4,
+          "end": 59.66,
+          "p": 0.996
+        },
+        {
+          "w": " the",
+          "start": 59.66,
+          "end": 59.94,
+          "p": 0.997
+        },
+        {
+          "w": " cost",
+          "start": 59.94,
+          "end": 60.18,
+          "p": 0.862
+        },
+        {
+          "w": " function",
+          "start": 60.18,
+          "end": 60.54,
+          "p": 0.994
+        },
+        {
+          "w": " j",
+          "start": 60.54,
+          "end": 60.96,
+          "p": 0.731
+        },
+        {
+          "w": " of",
+          "start": 60.96,
+          "end": 61.44,
+          "p": 0.926
+        },
+        {
+          "w": " w",
+          "start": 61.44,
+          "end": 61.68,
+          "p": 0.593
+        },
+        {
+          "w": " right",
+          "start": 61.68,
+          "end": 62.14,
+          "p": 0.045
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "start": 62.6,
+      "end": 69.6,
+      "text": "here that you want to minimize. In the example we've seen so far, this is a cost function for",
+      "words": [
+        {
+          "w": " here",
+          "start": 62.6,
+          "end": 62.94,
+          "p": 0.996
+        },
+        {
+          "w": " that",
+          "start": 62.94,
+          "end": 63.32,
+          "p": 0.895
+        },
+        {
+          "w": " you",
+          "start": 63.32,
+          "end": 63.46,
+          "p": 0.999
+        },
+        {
+          "w": " want",
+          "start": 63.46,
+          "end": 63.68,
+          "p": 0.999
+        },
+        {
+          "w": " to",
+          "start": 63.68,
+          "end": 63.82,
+          "p": 1.0
+        },
+        {
+          "w": " minimize.",
+          "start": 63.82,
+          "end": 64.16,
+          "p": 0.986
+        },
+        {
+          "w": " In",
+          "start": 64.96,
+          "end": 65.64,
+          "p": 0.994
+        },
+        {
+          "w": " the",
+          "start": 65.64,
+          "end": 65.98,
+          "p": 0.999
+        },
+        {
+          "w": " example",
+          "start": 65.98,
+          "end": 66.5,
+          "p": 0.998
+        },
+        {
+          "w": " we've",
+          "start": 66.5,
+          "end": 66.76,
+          "p": 0.986
+        },
+        {
+          "w": " seen",
+          "start": 66.76,
+          "end": 66.96,
+          "p": 1.0
+        },
+        {
+          "w": " so",
+          "start": 66.96,
+          "end": 67.16,
+          "p": 0.999
+        },
+        {
+          "w": " far,",
+          "start": 67.16,
+          "end": 67.52,
+          "p": 1.0
+        },
+        {
+          "w": " this",
+          "start": 67.7,
+          "end": 68.26,
+          "p": 0.999
+        },
+        {
+          "w": " is",
+          "start": 68.26,
+          "end": 68.42,
+          "p": 0.999
+        },
+        {
+          "w": " a",
+          "start": 68.42,
+          "end": 68.58,
+          "p": 0.983
+        },
+        {
+          "w": " cost",
+          "start": 68.58,
+          "end": 68.82,
+          "p": 0.995
+        },
+        {
+          "w": " function",
+          "start": 68.82,
+          "end": 69.18,
+          "p": 0.999
+        },
+        {
+          "w": " for",
+          "start": 69.18,
+          "end": 69.6,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "start": 69.6,
+      "end": 75.54,
+      "text": "linear regression, but it turns out that Gradient Descent is an algorithm that you can use to try",
+      "words": [
+        {
+          "w": " linear",
+          "start": 69.6,
+          "end": 69.98,
+          "p": 0.958
+        },
+        {
+          "w": " regression,",
+          "start": 69.98,
+          "end": 70.36,
+          "p": 1.0
+        },
+        {
+          "w": " but",
+          "start": 70.7,
+          "end": 71.56,
+          "p": 0.999
+        },
+        {
+          "w": " it",
+          "start": 71.56,
+          "end": 71.66,
+          "p": 0.999
+        },
+        {
+          "w": " turns",
+          "start": 71.66,
+          "end": 71.88,
+          "p": 1.0
+        },
+        {
+          "w": " out",
+          "start": 71.88,
+          "end": 72.1,
+          "p": 1.0
+        },
+        {
+          "w": " that",
+          "start": 72.1,
+          "end": 72.3,
+          "p": 0.994
+        },
+        {
+          "w": " Gradient",
+          "start": 72.3,
+          "end": 72.64,
+          "p": 0.685
+        },
+        {
+          "w": " Descent",
+          "start": 72.64,
+          "end": 72.98,
+          "p": 0.997
+        },
+        {
+          "w": " is",
+          "start": 72.98,
+          "end": 73.36,
+          "p": 0.999
+        },
+        {
+          "w": " an",
+          "start": 73.36,
+          "end": 73.56,
+          "p": 0.998
+        },
+        {
+          "w": " algorithm",
+          "start": 73.56,
+          "end": 73.88,
+          "p": 0.999
+        },
+        {
+          "w": " that",
+          "start": 73.88,
+          "end": 74.18,
+          "p": 0.987
+        },
+        {
+          "w": " you",
+          "start": 74.18,
+          "end": 74.26,
+          "p": 0.999
+        },
+        {
+          "w": " can",
+          "start": 74.26,
+          "end": 74.42,
+          "p": 0.999
+        },
+        {
+          "w": " use",
+          "start": 74.42,
+          "end": 74.74,
+          "p": 0.998
+        },
+        {
+          "w": " to",
+          "start": 74.74,
+          "end": 75.3,
+          "p": 0.996
+        },
+        {
+          "w": " try",
+          "start": 75.3,
+          "end": 75.54,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "start": 75.54,
+      "end": 83.38,
+      "text": "to minimize any function, not just a cost function for linear regression. Just to make this discussion",
+      "words": [
+        {
+          "w": " to",
+          "start": 75.54,
+          "end": 75.72,
+          "p": 0.997
+        },
+        {
+          "w": " minimize",
+          "start": 75.72,
+          "end": 76.12,
+          "p": 1.0
+        },
+        {
+          "w": " any",
+          "start": 76.12,
+          "end": 76.66,
+          "p": 0.994
+        },
+        {
+          "w": " function,",
+          "start": 76.66,
+          "end": 77.14,
+          "p": 0.999
+        },
+        {
+          "w": " not",
+          "start": 77.34,
+          "end": 78.02,
+          "p": 0.998
+        },
+        {
+          "w": " just",
+          "start": 78.02,
+          "end": 78.42,
+          "p": 1.0
+        },
+        {
+          "w": " a",
+          "start": 78.42,
+          "end": 78.68,
+          "p": 0.998
+        },
+        {
+          "w": " cost",
+          "start": 78.68,
+          "end": 78.96,
+          "p": 0.997
+        },
+        {
+          "w": " function",
+          "start": 78.96,
+          "end": 79.38,
+          "p": 0.999
+        },
+        {
+          "w": " for",
+          "start": 79.38,
+          "end": 80.06,
+          "p": 0.997
+        },
+        {
+          "w": " linear",
+          "start": 80.06,
+          "end": 80.4,
+          "p": 0.995
+        },
+        {
+          "w": " regression.",
+          "start": 80.4,
+          "end": 80.9,
+          "p": 0.998
+        },
+        {
+          "w": " Just",
+          "start": 81.76,
+          "end": 82.44,
+          "p": 0.993
+        },
+        {
+          "w": " to",
+          "start": 82.44,
+          "end": 82.6,
+          "p": 1.0
+        },
+        {
+          "w": " make",
+          "start": 82.6,
+          "end": 82.74,
+          "p": 1.0
+        },
+        {
+          "w": " this",
+          "start": 82.74,
+          "end": 82.94,
+          "p": 0.999
+        },
+        {
+          "w": " discussion",
+          "start": 82.94,
+          "end": 83.38,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "start": 83.38,
+      "end": 85.54,
+      "text": "on Gradient Descent more general, let's take a look at the cost function of gradient descent.",
+      "words": [
+        {
+          "w": " on",
+          "start": 83.38,
+          "end": 83.92,
+          "p": 0.996
+        },
+        {
+          "w": " Gradient",
+          "start": 83.92,
+          "end": 84.34,
+          "p": 0.867
+        },
+        {
+          "w": " Descent",
+          "start": 84.34,
+          "end": 84.72,
+          "p": 0.995
+        },
+        {
+          "w": " more",
+          "start": 84.72,
+          "end": 85.02,
+          "p": 0.994
+        },
+        {
+          "w": " general,",
+          "start": 85.02,
+          "end": 85.46,
+          "p": 0.904
+        },
+        {
+          "w": " let's",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.555
+        },
+        {
+          "w": " take",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.158
+        },
+        {
+          "w": " a",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.897
+        },
+        {
+          "w": " look",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.889
+        },
+        {
+          "w": " at",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.955
+        },
+        {
+          "w": " the",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.263
+        },
+        {
+          "w": " cost",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.324
+        },
+        {
+          "w": " function",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.929
+        },
+        {
+          "w": " of",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.396
+        },
+        {
+          "w": " gradient",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.132
+        },
+        {
+          "w": " descent.",
+          "start": 85.54,
+          "end": 85.54,
+          "p": 0.85
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "start": 85.56,
+      "end": 89.66,
+      "text": "It turns out that gradient descent applies to more general functions,",
+      "words": [
+        {
+          "w": " It",
+          "start": 85.56,
+          "end": 85.88,
+          "p": 0.074
+        },
+        {
+          "w": " turns",
+          "start": 85.88,
+          "end": 86.48,
+          "p": 0.998
+        },
+        {
+          "w": " out",
+          "start": 86.48,
+          "end": 86.76,
+          "p": 0.998
+        },
+        {
+          "w": " that",
+          "start": 86.76,
+          "end": 87.08,
+          "p": 0.98
+        },
+        {
+          "w": " gradient",
+          "start": 87.08,
+          "end": 87.48,
+          "p": 0.989
+        },
+        {
+          "w": " descent",
+          "start": 87.48,
+          "end": 87.76,
+          "p": 0.997
+        },
+        {
+          "w": " applies",
+          "start": 87.76,
+          "end": 88.14,
+          "p": 0.998
+        },
+        {
+          "w": " to",
+          "start": 88.14,
+          "end": 88.56,
+          "p": 0.999
+        },
+        {
+          "w": " more",
+          "start": 88.56,
+          "end": 88.86,
+          "p": 0.996
+        },
+        {
+          "w": " general",
+          "start": 88.86,
+          "end": 89.28,
+          "p": 0.997
+        },
+        {
+          "w": " functions,",
+          "start": 89.28,
+          "end": 89.66,
+          "p": 0.997
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "start": 90.08,
+      "end": 95.88,
+      "text": "including other cost functions that work with models that have more than two parameters.",
+      "words": [
+        {
+          "w": " including",
+          "start": 90.08,
+          "end": 90.64,
+          "p": 0.994
+        },
+        {
+          "w": " other",
+          "start": 90.64,
+          "end": 91.24,
+          "p": 0.996
+        },
+        {
+          "w": " cost",
+          "start": 91.24,
+          "end": 91.62,
+          "p": 0.722
+        },
+        {
+          "w": " functions",
+          "start": 91.62,
+          "end": 92.08,
+          "p": 0.997
+        },
+        {
+          "w": " that",
+          "start": 92.08,
+          "end": 92.72,
+          "p": 0.981
+        },
+        {
+          "w": " work",
+          "start": 92.72,
+          "end": 93.02,
+          "p": 0.998
+        },
+        {
+          "w": " with",
+          "start": 93.02,
+          "end": 93.32,
+          "p": 0.999
+        },
+        {
+          "w": " models",
+          "start": 93.32,
+          "end": 93.8,
+          "p": 0.997
+        },
+        {
+          "w": " that",
+          "start": 93.8,
+          "end": 94.22,
+          "p": 0.997
+        },
+        {
+          "w": " have",
+          "start": 94.22,
+          "end": 94.44,
+          "p": 0.999
+        },
+        {
+          "w": " more",
+          "start": 94.44,
+          "end": 94.82,
+          "p": 0.999
+        },
+        {
+          "w": " than",
+          "start": 94.82,
+          "end": 95.28,
+          "p": 0.997
+        },
+        {
+          "w": " two",
+          "start": 95.28,
+          "end": 95.54,
+          "p": 0.93
+        },
+        {
+          "w": " parameters.",
+          "start": 95.54,
+          "end": 95.88,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "start": 97.0,
+      "end": 106.58,
+      "text": "So for instance, if you have a cost function j as a function of w1, w2, up to wn and b,",
+      "words": [
+        {
+          "w": " So",
+          "start": 97.0,
+          "end": 97.38,
+          "p": 0.943
+        },
+        {
+          "w": " for",
+          "start": 97.38,
+          "end": 97.76,
+          "p": 0.388
+        },
+        {
+          "w": " instance,",
+          "start": 97.76,
+          "end": 98.12,
+          "p": 0.999
+        },
+        {
+          "w": " if",
+          "start": 98.38,
+          "end": 99.0,
+          "p": 0.995
+        },
+        {
+          "w": " you",
+          "start": 99.0,
+          "end": 99.18,
+          "p": 1.0
+        },
+        {
+          "w": " have",
+          "start": 99.18,
+          "end": 99.54,
+          "p": 0.999
+        },
+        {
+          "w": " a",
+          "start": 99.54,
+          "end": 99.68,
+          "p": 0.98
+        },
+        {
+          "w": " cost",
+          "start": 99.68,
+          "end": 99.96,
+          "p": 0.994
+        },
+        {
+          "w": " function",
+          "start": 99.96,
+          "end": 100.3,
+          "p": 0.999
+        },
+        {
+          "w": " j",
+          "start": 100.3,
+          "end": 100.62,
+          "p": 0.621
+        },
+        {
+          "w": " as",
+          "start": 100.62,
+          "end": 101.54,
+          "p": 0.968
+        },
+        {
+          "w": " a",
+          "start": 101.54,
+          "end": 101.68,
+          "p": 0.998
+        },
+        {
+          "w": " function",
+          "start": 101.68,
+          "end": 101.94,
+          "p": 0.999
+        },
+        {
+          "w": " of",
+          "start": 101.94,
+          "end": 102.54,
+          "p": 0.998
+        },
+        {
+          "w": " w1,",
+          "start": 102.54,
+          "end": 103.1,
+          "p": 0.78
+        },
+        {
+          "w": " w2,",
+          "start": 103.2,
+          "end": 103.94,
+          "p": 0.993
+        },
+        {
+          "w": " up",
+          "start": 104.02,
+          "end": 104.58,
+          "p": 0.997
+        },
+        {
+          "w": " to",
+          "start": 104.58,
+          "end": 104.86,
+          "p": 0.997
+        },
+        {
+          "w": " wn",
+          "start": 104.86,
+          "end": 105.78,
+          "p": 0.497
+        },
+        {
+          "w": " and",
+          "start": 105.78,
+          "end": 106.26,
+          "p": 0.764
+        },
+        {
+          "w": " b,",
+          "start": 106.26,
+          "end": 106.58,
+          "p": 0.986
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "start": 107.4,
+      "end": 114.52,
+      "text": "your objective is to minimize j over the parameters w1 to wn and b.",
+      "words": [
+        {
+          "w": " your",
+          "start": 107.4,
+          "end": 107.78,
+          "p": 0.994
+        },
+        {
+          "w": " objective",
+          "start": 107.78,
+          "end": 108.32,
+          "p": 0.999
+        },
+        {
+          "w": " is",
+          "start": 108.32,
+          "end": 108.88,
+          "p": 1.0
+        },
+        {
+          "w": " to",
+          "start": 108.88,
+          "end": 109.1,
+          "p": 1.0
+        },
+        {
+          "w": " minimize",
+          "start": 109.1,
+          "end": 109.54,
+          "p": 0.998
+        },
+        {
+          "w": " j",
+          "start": 109.54,
+          "end": 110.12,
+          "p": 0.999
+        },
+        {
+          "w": " over",
+          "start": 110.12,
+          "end": 111.12,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 111.12,
+          "end": 111.32,
+          "p": 0.999
+        },
+        {
+          "w": " parameters",
+          "start": 111.32,
+          "end": 111.74,
+          "p": 0.998
+        },
+        {
+          "w": " w1",
+          "start": 111.74,
+          "end": 112.64,
+          "p": 0.999
+        },
+        {
+          "w": " to",
+          "start": 112.64,
+          "end": 113.08,
+          "p": 0.96
+        },
+        {
+          "w": " wn",
+          "start": 113.08,
+          "end": 113.72,
+          "p": 0.774
+        },
+        {
+          "w": " and",
+          "start": 113.72,
+          "end": 114.2,
+          "p": 0.998
+        },
+        {
+          "w": " b.",
+          "start": 114.2,
+          "end": 114.52,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "start": 115.56,
+      "end": 123.74,
+      "text": "In other words, you want to pick values for w1 through wn and b that gives you the smallest",
+      "words": [
+        {
+          "w": " In",
+          "start": 115.56,
+          "end": 115.56,
+          "p": 0.912
+        },
+        {
+          "w": " other",
+          "start": 115.56,
+          "end": 115.74,
+          "p": 0.998
+        },
+        {
+          "w": " words,",
+          "start": 115.74,
+          "end": 116.14,
+          "p": 0.999
+        },
+        {
+          "w": " you",
+          "start": 116.26,
+          "end": 116.7,
+          "p": 0.996
+        },
+        {
+          "w": " want",
+          "start": 116.7,
+          "end": 116.94,
+          "p": 0.986
+        },
+        {
+          "w": " to",
+          "start": 116.94,
+          "end": 117.08,
+          "p": 0.999
+        },
+        {
+          "w": " pick",
+          "start": 117.08,
+          "end": 117.3,
+          "p": 0.998
+        },
+        {
+          "w": " values",
+          "start": 117.3,
+          "end": 117.76,
+          "p": 0.996
+        },
+        {
+          "w": " for",
+          "start": 117.76,
+          "end": 118.32,
+          "p": 0.979
+        },
+        {
+          "w": " w1",
+          "start": 118.32,
+          "end": 119.14,
+          "p": 0.615
+        },
+        {
+          "w": " through",
+          "start": 119.14,
+          "end": 119.66,
+          "p": 0.912
+        },
+        {
+          "w": " wn",
+          "start": 119.66,
+          "end": 120.6,
+          "p": 0.427
+        },
+        {
+          "w": " and",
+          "start": 120.6,
+          "end": 121.2,
+          "p": 0.963
+        },
+        {
+          "w": " b",
+          "start": 121.2,
+          "end": 121.68,
+          "p": 0.869
+        },
+        {
+          "w": " that",
+          "start": 121.68,
+          "end": 122.5,
+          "p": 0.807
+        },
+        {
+          "w": " gives",
+          "start": 122.5,
+          "end": 122.82,
+          "p": 0.954
+        },
+        {
+          "w": " you",
+          "start": 122.82,
+          "end": 123.04,
+          "p": 0.997
+        },
+        {
+          "w": " the",
+          "start": 123.04,
+          "end": 123.3,
+          "p": 0.997
+        },
+        {
+          "w": " smallest",
+          "start": 123.3,
+          "end": 123.74,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "start": 123.74,
+      "end": 129.6,
+      "text": "possible value of j. It turns out that gradient descent is an algorithm that you can apply",
+      "words": [
+        {
+          "w": " possible",
+          "start": 123.74,
+          "end": 124.1,
+          "p": 0.995
+        },
+        {
+          "w": " value",
+          "start": 124.1,
+          "end": 124.68,
+          "p": 0.998
+        },
+        {
+          "w": " of",
+          "start": 124.68,
+          "end": 124.94,
+          "p": 0.997
+        },
+        {
+          "w": " j.",
+          "start": 124.94,
+          "end": 125.06,
+          "p": 0.954
+        },
+        {
+          "w": " It",
+          "start": 125.94,
+          "end": 126.54,
+          "p": 0.996
+        },
+        {
+          "w": " turns",
+          "start": 126.54,
+          "end": 126.78,
+          "p": 0.999
+        },
+        {
+          "w": " out",
+          "start": 126.78,
+          "end": 127.0,
+          "p": 0.998
+        },
+        {
+          "w": " that",
+          "start": 127.0,
+          "end": 127.26,
+          "p": 0.977
+        },
+        {
+          "w": " gradient",
+          "start": 127.26,
+          "end": 127.6,
+          "p": 0.991
+        },
+        {
+          "w": " descent",
+          "start": 127.6,
+          "end": 127.92,
+          "p": 0.994
+        },
+        {
+          "w": " is",
+          "start": 127.92,
+          "end": 128.42,
+          "p": 0.998
+        },
+        {
+          "w": " an",
+          "start": 128.42,
+          "end": 128.6,
+          "p": 0.996
+        },
+        {
+          "w": " algorithm",
+          "start": 128.6,
+          "end": 128.9,
+          "p": 0.981
+        },
+        {
+          "w": " that",
+          "start": 128.9,
+          "end": 129.14,
+          "p": 0.938
+        },
+        {
+          "w": " you",
+          "start": 129.14,
+          "end": 129.22,
+          "p": 0.997
+        },
+        {
+          "w": " can",
+          "start": 129.22,
+          "end": 129.36,
+          "p": 0.995
+        },
+        {
+          "w": " apply",
+          "start": 129.36,
+          "end": 129.6,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "start": 129.6,
+      "end": 137.4,
+      "text": "to try to minimize this cost function j as well. What you're going to do is just start off",
+      "words": [
+        {
+          "w": " to",
+          "start": 129.6,
+          "end": 129.96,
+          "p": 0.994
+        },
+        {
+          "w": " try",
+          "start": 129.96,
+          "end": 130.22,
+          "p": 0.992
+        },
+        {
+          "w": " to",
+          "start": 130.22,
+          "end": 130.38,
+          "p": 0.991
+        },
+        {
+          "w": " minimize",
+          "start": 130.38,
+          "end": 130.76,
+          "p": 0.983
+        },
+        {
+          "w": " this",
+          "start": 130.76,
+          "end": 131.5,
+          "p": 0.997
+        },
+        {
+          "w": " cost",
+          "start": 131.5,
+          "end": 131.84,
+          "p": 0.8
+        },
+        {
+          "w": " function",
+          "start": 131.84,
+          "end": 132.18,
+          "p": 0.99
+        },
+        {
+          "w": " j",
+          "start": 132.18,
+          "end": 132.66,
+          "p": 0.61
+        },
+        {
+          "w": " as",
+          "start": 132.66,
+          "end": 133.08,
+          "p": 0.949
+        },
+        {
+          "w": " well.",
+          "start": 133.08,
+          "end": 133.42,
+          "p": 1.0
+        },
+        {
+          "w": " What",
+          "start": 134.74,
+          "end": 135.34,
+          "p": 0.988
+        },
+        {
+          "w": " you're",
+          "start": 135.34,
+          "end": 135.56,
+          "p": 0.937
+        },
+        {
+          "w": " going",
+          "start": 135.56,
+          "end": 135.62,
+          "p": 0.998
+        },
+        {
+          "w": " to",
+          "start": 135.62,
+          "end": 135.74,
+          "p": 0.999
+        },
+        {
+          "w": " do",
+          "start": 135.74,
+          "end": 135.96,
+          "p": 0.999
+        },
+        {
+          "w": " is",
+          "start": 135.96,
+          "end": 136.24,
+          "p": 0.996
+        },
+        {
+          "w": " just",
+          "start": 136.24,
+          "end": 136.78,
+          "p": 0.899
+        },
+        {
+          "w": " start",
+          "start": 136.78,
+          "end": 137.14,
+          "p": 0.948
+        },
+        {
+          "w": " off",
+          "start": 137.14,
+          "end": 137.4,
+          "p": 0.968
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "start": 137.86,
+      "end": 144.72,
+      "text": "with some initial guesses for w and b. In linear regression, it won't matter too much what the",
+      "words": [
+        {
+          "w": " with",
+          "start": 137.86,
+          "end": 138.16,
+          "p": 0.999
+        },
+        {
+          "w": " some",
+          "start": 138.16,
+          "end": 138.42,
+          "p": 0.999
+        },
+        {
+          "w": " initial",
+          "start": 138.42,
+          "end": 138.86,
+          "p": 0.999
+        },
+        {
+          "w": " guesses",
+          "start": 138.86,
+          "end": 139.42,
+          "p": 0.999
+        },
+        {
+          "w": " for",
+          "start": 139.42,
+          "end": 139.9,
+          "p": 0.947
+        },
+        {
+          "w": " w",
+          "start": 139.9,
+          "end": 140.38,
+          "p": 0.993
+        },
+        {
+          "w": " and",
+          "start": 140.38,
+          "end": 140.66,
+          "p": 0.996
+        },
+        {
+          "w": " b.",
+          "start": 140.66,
+          "end": 140.96,
+          "p": 0.996
+        },
+        {
+          "w": " In",
+          "start": 141.34,
+          "end": 141.94,
+          "p": 0.997
+        },
+        {
+          "w": " linear",
+          "start": 141.94,
+          "end": 142.34,
+          "p": 0.993
+        },
+        {
+          "w": " regression,",
+          "start": 142.34,
+          "end": 142.62,
+          "p": 0.998
+        },
+        {
+          "w": " it",
+          "start": 142.96,
+          "end": 143.18,
+          "p": 0.999
+        },
+        {
+          "w": " won't",
+          "start": 143.18,
+          "end": 143.42,
+          "p": 0.994
+        },
+        {
+          "w": " matter",
+          "start": 143.42,
+          "end": 143.68,
+          "p": 0.999
+        },
+        {
+          "w": " too",
+          "start": 143.68,
+          "end": 143.98,
+          "p": 0.995
+        },
+        {
+          "w": " much",
+          "start": 143.98,
+          "end": 144.26,
+          "p": 1.0
+        },
+        {
+          "w": " what",
+          "start": 144.26,
+          "end": 144.52,
+          "p": 0.978
+        },
+        {
+          "w": " the",
+          "start": 144.52,
+          "end": 144.72,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "start": 144.72,
+      "end": 151.82,
+      "text": "initial values are, so a common choice is to set them both to zero. So, for example, you can set",
+      "words": [
+        {
+          "w": " initial",
+          "start": 144.72,
+          "end": 144.9,
+          "p": 0.413
+        },
+        {
+          "w": " values",
+          "start": 144.9,
+          "end": 145.64,
+          "p": 0.837
+        },
+        {
+          "w": " are,",
+          "start": 145.64,
+          "end": 145.86,
+          "p": 0.98
+        },
+        {
+          "w": " so",
+          "start": 146.0,
+          "end": 146.66,
+          "p": 0.986
+        },
+        {
+          "w": " a",
+          "start": 146.66,
+          "end": 146.9,
+          "p": 0.989
+        },
+        {
+          "w": " common",
+          "start": 146.9,
+          "end": 147.22,
+          "p": 1.0
+        },
+        {
+          "w": " choice",
+          "start": 147.22,
+          "end": 147.5,
+          "p": 0.999
+        },
+        {
+          "w": " is",
+          "start": 147.5,
+          "end": 148.0,
+          "p": 0.995
+        },
+        {
+          "w": " to",
+          "start": 148.0,
+          "end": 148.24,
+          "p": 0.994
+        },
+        {
+          "w": " set",
+          "start": 148.24,
+          "end": 148.6,
+          "p": 0.999
+        },
+        {
+          "w": " them",
+          "start": 148.6,
+          "end": 148.78,
+          "p": 0.979
+        },
+        {
+          "w": " both",
+          "start": 148.78,
+          "end": 149.06,
+          "p": 0.995
+        },
+        {
+          "w": " to",
+          "start": 149.06,
+          "end": 149.34,
+          "p": 0.994
+        },
+        {
+          "w": " zero.",
+          "start": 149.34,
+          "end": 149.62,
+          "p": 0.546
+        },
+        {
+          "w": " So,",
+          "start": 149.84,
+          "end": 150.36,
+          "p": 0.924
+        },
+        {
+          "w": " for",
+          "start": 150.48,
+          "end": 150.78,
+          "p": 0.998
+        },
+        {
+          "w": " example,",
+          "start": 150.78,
+          "end": 151.18,
+          "p": 0.999
+        },
+        {
+          "w": " you",
+          "start": 151.22,
+          "end": 151.42,
+          "p": 0.995
+        },
+        {
+          "w": " can",
+          "start": 151.42,
+          "end": 151.54,
+          "p": 0.986
+        },
+        {
+          "w": " set",
+          "start": 151.54,
+          "end": 151.82,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "start": 151.82,
+      "end": 158.2,
+      "text": "w to zero and b to zero as the initial guess. With the gradient descent algorithm, what you're",
+      "words": [
+        {
+          "w": " w",
+          "start": 151.82,
+          "end": 152.18,
+          "p": 0.68
+        },
+        {
+          "w": " to",
+          "start": 152.18,
+          "end": 152.42,
+          "p": 0.949
+        },
+        {
+          "w": " zero",
+          "start": 152.42,
+          "end": 152.72,
+          "p": 0.817
+        },
+        {
+          "w": " and",
+          "start": 152.72,
+          "end": 153.1,
+          "p": 0.932
+        },
+        {
+          "w": " b",
+          "start": 153.1,
+          "end": 153.32,
+          "p": 0.979
+        },
+        {
+          "w": " to",
+          "start": 153.32,
+          "end": 153.52,
+          "p": 0.995
+        },
+        {
+          "w": " zero",
+          "start": 153.52,
+          "end": 153.9,
+          "p": 0.976
+        },
+        {
+          "w": " as",
+          "start": 153.9,
+          "end": 154.34,
+          "p": 0.974
+        },
+        {
+          "w": " the",
+          "start": 154.34,
+          "end": 154.56,
+          "p": 0.992
+        },
+        {
+          "w": " initial",
+          "start": 154.56,
+          "end": 154.82,
+          "p": 0.999
+        },
+        {
+          "w": " guess.",
+          "start": 154.82,
+          "end": 155.2,
+          "p": 0.993
+        },
+        {
+          "w": " With",
+          "start": 155.44,
+          "end": 155.94,
+          "p": 0.996
+        },
+        {
+          "w": " the",
+          "start": 155.94,
+          "end": 156.12,
+          "p": 0.988
+        },
+        {
+          "w": " gradient",
+          "start": 156.12,
+          "end": 156.44,
+          "p": 0.986
+        },
+        {
+          "w": " descent",
+          "start": 156.44,
+          "end": 156.7,
+          "p": 0.986
+        },
+        {
+          "w": " algorithm,",
+          "start": 156.7,
+          "end": 157.16,
+          "p": 1.0
+        },
+        {
+          "w": " what",
+          "start": 157.54,
+          "end": 157.94,
+          "p": 0.998
+        },
+        {
+          "w": " you're",
+          "start": 157.94,
+          "end": 158.2,
+          "p": 0.99
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "start": 158.2,
+      "end": 164.84,
+      "text": "going to do is you'll keep on changing the parameters w and b a bit every time to try to",
+      "words": [
+        {
+          "w": " going",
+          "start": 158.2,
+          "end": 158.34,
+          "p": 0.999
+        },
+        {
+          "w": " to",
+          "start": 158.34,
+          "end": 158.44,
+          "p": 0.999
+        },
+        {
+          "w": " do",
+          "start": 158.44,
+          "end": 158.7,
+          "p": 0.998
+        },
+        {
+          "w": " is",
+          "start": 158.7,
+          "end": 159.02,
+          "p": 0.997
+        },
+        {
+          "w": " you'll",
+          "start": 159.02,
+          "end": 159.74,
+          "p": 0.763
+        },
+        {
+          "w": " keep",
+          "start": 159.74,
+          "end": 160.14,
+          "p": 1.0
+        },
+        {
+          "w": " on",
+          "start": 160.14,
+          "end": 160.38,
+          "p": 0.997
+        },
+        {
+          "w": " changing",
+          "start": 160.38,
+          "end": 160.88,
+          "p": 1.0
+        },
+        {
+          "w": " the",
+          "start": 160.88,
+          "end": 161.18,
+          "p": 0.996
+        },
+        {
+          "w": " parameters",
+          "start": 161.18,
+          "end": 161.5,
+          "p": 0.997
+        },
+        {
+          "w": " w",
+          "start": 161.5,
+          "end": 162.04,
+          "p": 0.926
+        },
+        {
+          "w": " and",
+          "start": 162.04,
+          "end": 162.26,
+          "p": 0.997
+        },
+        {
+          "w": " b",
+          "start": 162.26,
+          "end": 162.5,
+          "p": 0.998
+        },
+        {
+          "w": " a",
+          "start": 162.5,
+          "end": 162.94,
+          "p": 0.989
+        },
+        {
+          "w": " bit",
+          "start": 162.94,
+          "end": 163.18,
+          "p": 1.0
+        },
+        {
+          "w": " every",
+          "start": 163.18,
+          "end": 163.44,
+          "p": 0.997
+        },
+        {
+          "w": " time",
+          "start": 163.44,
+          "end": 163.82,
+          "p": 1.0
+        },
+        {
+          "w": " to",
+          "start": 163.82,
+          "end": 164.38,
+          "p": 0.916
+        },
+        {
+          "w": " try",
+          "start": 164.38,
+          "end": 164.64,
+          "p": 1.0
+        },
+        {
+          "w": " to",
+          "start": 164.64,
+          "end": 164.84,
+          "p": 0.996
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "start": 164.84,
+      "end": 174.26,
+      "text": "reduce the cost j of wb until hopefully j settles at or near a minimum. One thing I should note",
+      "words": [
+        {
+          "w": " reduce",
+          "start": 164.84,
+          "end": 165.26,
+          "p": 1.0
+        },
+        {
+          "w": " the",
+          "start": 165.26,
+          "end": 165.56,
+          "p": 0.999
+        },
+        {
+          "w": " cost",
+          "start": 165.56,
+          "end": 165.9,
+          "p": 0.98
+        },
+        {
+          "w": " j",
+          "start": 165.9,
+          "end": 166.22,
+          "p": 0.739
+        },
+        {
+          "w": " of",
+          "start": 166.22,
+          "end": 166.84,
+          "p": 0.995
+        },
+        {
+          "w": " wb",
+          "start": 166.84,
+          "end": 167.42,
+          "p": 0.683
+        },
+        {
+          "w": " until",
+          "start": 167.42,
+          "end": 168.34,
+          "p": 0.891
+        },
+        {
+          "w": " hopefully",
+          "start": 168.34,
+          "end": 168.96,
+          "p": 0.807
+        },
+        {
+          "w": " j",
+          "start": 168.96,
+          "end": 169.68,
+          "p": 0.956
+        },
+        {
+          "w": " settles",
+          "start": 169.68,
+          "end": 170.22,
+          "p": 0.999
+        },
+        {
+          "w": " at",
+          "start": 170.22,
+          "end": 170.44,
+          "p": 0.999
+        },
+        {
+          "w": " or",
+          "start": 170.44,
+          "end": 170.82,
+          "p": 0.72
+        },
+        {
+          "w": " near",
+          "start": 170.82,
+          "end": 171.16,
+          "p": 0.999
+        },
+        {
+          "w": " a",
+          "start": 171.16,
+          "end": 171.56,
+          "p": 0.993
+        },
+        {
+          "w": " minimum.",
+          "start": 171.56,
+          "end": 171.88,
+          "p": 0.999
+        },
+        {
+          "w": " One",
+          "start": 172.82,
+          "end": 173.42,
+          "p": 0.998
+        },
+        {
+          "w": " thing",
+          "start": 173.42,
+          "end": 173.68,
+          "p": 1.0
+        },
+        {
+          "w": " I",
+          "start": 173.68,
+          "end": 173.82,
+          "p": 0.98
+        },
+        {
+          "w": " should",
+          "start": 173.82,
+          "end": 174.0,
+          "p": 1.0
+        },
+        {
+          "w": " note",
+          "start": 174.0,
+          "end": 174.26,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "start": 174.26,
+      "end": 181.06,
+      "text": "is that for some functions j that may not be a bow shape or a hammock shape, it is possible for",
+      "words": [
+        {
+          "w": " is",
+          "start": 174.26,
+          "end": 174.46,
+          "p": 0.406
+        },
+        {
+          "w": " that",
+          "start": 174.46,
+          "end": 174.86,
+          "p": 0.995
+        },
+        {
+          "w": " for",
+          "start": 174.86,
+          "end": 175.06,
+          "p": 0.96
+        },
+        {
+          "w": " some",
+          "start": 175.06,
+          "end": 175.36,
+          "p": 0.994
+        },
+        {
+          "w": " functions",
+          "start": 175.36,
+          "end": 175.86,
+          "p": 0.975
+        },
+        {
+          "w": " j",
+          "start": 175.86,
+          "end": 176.16,
+          "p": 0.671
+        },
+        {
+          "w": " that",
+          "start": 176.16,
+          "end": 176.92,
+          "p": 0.873
+        },
+        {
+          "w": " may",
+          "start": 176.92,
+          "end": 177.22,
+          "p": 0.997
+        },
+        {
+          "w": " not",
+          "start": 177.22,
+          "end": 177.52,
+          "p": 0.998
+        },
+        {
+          "w": " be",
+          "start": 177.52,
+          "end": 177.72,
+          "p": 0.998
+        },
+        {
+          "w": " a",
+          "start": 177.72,
+          "end": 177.94,
+          "p": 0.995
+        },
+        {
+          "w": " bow",
+          "start": 177.94,
+          "end": 178.12,
+          "p": 0.928
+        },
+        {
+          "w": " shape",
+          "start": 178.12,
+          "end": 178.46,
+          "p": 0.948
+        },
+        {
+          "w": " or",
+          "start": 178.46,
+          "end": 178.9,
+          "p": 0.984
+        },
+        {
+          "w": " a",
+          "start": 178.9,
+          "end": 178.96,
+          "p": 0.727
+        },
+        {
+          "w": " hammock",
+          "start": 178.96,
+          "end": 179.3,
+          "p": 0.982
+        },
+        {
+          "w": " shape,",
+          "start": 179.3,
+          "end": 179.54,
+          "p": 0.999
+        },
+        {
+          "w": " it",
+          "start": 179.72,
+          "end": 180.18,
+          "p": 0.994
+        },
+        {
+          "w": " is",
+          "start": 180.18,
+          "end": 180.3,
+          "p": 0.995
+        },
+        {
+          "w": " possible",
+          "start": 180.3,
+          "end": 180.74,
+          "p": 1.0
+        },
+        {
+          "w": " for",
+          "start": 180.74,
+          "end": 181.06,
+          "p": 0.997
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "start": 181.06,
+      "end": 188.9,
+      "text": "there to be more than one possible minimum. Let's take a look at an example of a more complex",
+      "words": [
+        {
+          "w": " there",
+          "start": 181.06,
+          "end": 181.34,
+          "p": 0.978
+        },
+        {
+          "w": " to",
+          "start": 181.34,
+          "end": 181.56,
+          "p": 0.998
+        },
+        {
+          "w": " be",
+          "start": 181.56,
+          "end": 181.7,
+          "p": 1.0
+        },
+        {
+          "w": " more",
+          "start": 181.7,
+          "end": 182.04,
+          "p": 0.999
+        },
+        {
+          "w": " than",
+          "start": 182.04,
+          "end": 182.42,
+          "p": 0.997
+        },
+        {
+          "w": " one",
+          "start": 182.42,
+          "end": 182.72,
+          "p": 0.971
+        },
+        {
+          "w": " possible",
+          "start": 182.72,
+          "end": 183.2,
+          "p": 0.998
+        },
+        {
+          "w": " minimum.",
+          "start": 183.2,
+          "end": 183.7,
+          "p": 0.997
+        },
+        {
+          "w": " Let's",
+          "start": 185.72,
+          "end": 186.36,
+          "p": 0.994
+        },
+        {
+          "w": " take",
+          "start": 186.36,
+          "end": 186.5,
+          "p": 0.993
+        },
+        {
+          "w": " a",
+          "start": 186.5,
+          "end": 186.58,
+          "p": 0.998
+        },
+        {
+          "w": " look",
+          "start": 186.58,
+          "end": 186.76,
+          "p": 1.0
+        },
+        {
+          "w": " at",
+          "start": 186.76,
+          "end": 186.9,
+          "p": 0.998
+        },
+        {
+          "w": " an",
+          "start": 186.9,
+          "end": 187.0,
+          "p": 0.976
+        },
+        {
+          "w": " example",
+          "start": 187.0,
+          "end": 187.44,
+          "p": 1.0
+        },
+        {
+          "w": " of",
+          "start": 187.44,
+          "end": 188.02,
+          "p": 0.998
+        },
+        {
+          "w": " a",
+          "start": 188.02,
+          "end": 188.14,
+          "p": 0.994
+        },
+        {
+          "w": " more",
+          "start": 188.14,
+          "end": 188.34,
+          "p": 0.998
+        },
+        {
+          "w": " complex",
+          "start": 188.34,
+          "end": 188.9,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "start": 188.9,
+      "end": 196.08,
+      "text": "surface plot j to see what gradient descent is doing. This function is not a squared error cost",
+      "words": [
+        {
+          "w": " surface",
+          "start": 188.9,
+          "end": 189.28,
+          "p": 0.986
+        },
+        {
+          "w": " plot",
+          "start": 189.28,
+          "end": 189.66,
+          "p": 0.966
+        },
+        {
+          "w": " j",
+          "start": 189.66,
+          "end": 190.02,
+          "p": 0.877
+        },
+        {
+          "w": " to",
+          "start": 190.02,
+          "end": 190.78,
+          "p": 0.891
+        },
+        {
+          "w": " see",
+          "start": 190.78,
+          "end": 191.02,
+          "p": 1.0
+        },
+        {
+          "w": " what",
+          "start": 191.02,
+          "end": 191.32,
+          "p": 0.999
+        },
+        {
+          "w": " gradient",
+          "start": 191.32,
+          "end": 191.68,
+          "p": 0.975
+        },
+        {
+          "w": " descent",
+          "start": 191.68,
+          "end": 191.98,
+          "p": 0.989
+        },
+        {
+          "w": " is",
+          "start": 191.98,
+          "end": 192.32,
+          "p": 0.999
+        },
+        {
+          "w": " doing.",
+          "start": 192.32,
+          "end": 192.64,
+          "p": 1.0
+        },
+        {
+          "w": " This",
+          "start": 193.1,
+          "end": 193.74,
+          "p": 0.997
+        },
+        {
+          "w": " function",
+          "start": 193.74,
+          "end": 194.08,
+          "p": 0.999
+        },
+        {
+          "w": " is",
+          "start": 194.08,
+          "end": 194.46,
+          "p": 0.999
+        },
+        {
+          "w": " not",
+          "start": 194.46,
+          "end": 194.82,
+          "p": 0.997
+        },
+        {
+          "w": " a",
+          "start": 194.82,
+          "end": 195.1,
+          "p": 0.999
+        },
+        {
+          "w": " squared",
+          "start": 195.1,
+          "end": 195.46,
+          "p": 0.987
+        },
+        {
+          "w": " error",
+          "start": 195.46,
+          "end": 195.74,
+          "p": 0.837
+        },
+        {
+          "w": " cost",
+          "start": 195.74,
+          "end": 196.08,
+          "p": 0.708
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "start": 196.08,
+      "end": 202.44,
+      "text": "function. For linear regression with the squared error cost function, you always end up with a bow",
+      "words": [
+        {
+          "w": " function.",
+          "start": 196.08,
+          "end": 196.58,
+          "p": 0.999
+        },
+        {
+          "w": " For",
+          "start": 196.86,
+          "end": 197.5,
+          "p": 0.998
+        },
+        {
+          "w": " linear",
+          "start": 197.5,
+          "end": 197.8,
+          "p": 0.999
+        },
+        {
+          "w": " regression",
+          "start": 197.8,
+          "end": 198.1,
+          "p": 0.999
+        },
+        {
+          "w": " with",
+          "start": 198.1,
+          "end": 198.66,
+          "p": 0.964
+        },
+        {
+          "w": " the",
+          "start": 198.66,
+          "end": 198.82,
+          "p": 0.988
+        },
+        {
+          "w": " squared",
+          "start": 198.82,
+          "end": 199.22,
+          "p": 0.996
+        },
+        {
+          "w": " error",
+          "start": 199.22,
+          "end": 199.5,
+          "p": 0.996
+        },
+        {
+          "w": " cost",
+          "start": 199.5,
+          "end": 199.8,
+          "p": 0.995
+        },
+        {
+          "w": " function,",
+          "start": 199.8,
+          "end": 200.14,
+          "p": 0.999
+        },
+        {
+          "w": " you",
+          "start": 200.36,
+          "end": 200.82,
+          "p": 0.998
+        },
+        {
+          "w": " always",
+          "start": 200.82,
+          "end": 201.26,
+          "p": 0.996
+        },
+        {
+          "w": " end",
+          "start": 201.26,
+          "end": 201.58,
+          "p": 0.999
+        },
+        {
+          "w": " up",
+          "start": 201.58,
+          "end": 201.84,
+          "p": 1.0
+        },
+        {
+          "w": " with",
+          "start": 201.84,
+          "end": 202.08,
+          "p": 1.0
+        },
+        {
+          "w": " a",
+          "start": 202.08,
+          "end": 202.22,
+          "p": 0.997
+        },
+        {
+          "w": " bow",
+          "start": 202.22,
+          "end": 202.44,
+          "p": 0.995
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "start": 202.44,
+      "end": 205.62,
+      "text": "shape or a hammock shape. But this function is not a squared error cost function. For linear",
+      "words": [
+        {
+          "w": " shape",
+          "start": 202.44,
+          "end": 202.76,
+          "p": 0.995
+        },
+        {
+          "w": " or",
+          "start": 202.76,
+          "end": 203.18,
+          "p": 0.993
+        },
+        {
+          "w": " a",
+          "start": 203.18,
+          "end": 203.3,
+          "p": 0.919
+        },
+        {
+          "w": " hammock",
+          "start": 203.3,
+          "end": 203.7,
+          "p": 0.996
+        },
+        {
+          "w": " shape.",
+          "start": 203.7,
+          "end": 204.04,
+          "p": 0.999
+        },
+        {
+          "w": " But",
+          "start": 204.4,
+          "end": 205.04,
+          "p": 0.995
+        },
+        {
+          "w": " this",
+          "start": 205.04,
+          "end": 205.52,
+          "p": 0.978
+        },
+        {
+          "w": " function",
+          "start": 205.52,
+          "end": 205.62,
+          "p": 0.628
+        },
+        {
+          "w": " is",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.513
+        },
+        {
+          "w": " not",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.601
+        },
+        {
+          "w": " a",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.875
+        },
+        {
+          "w": " squared",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.743
+        },
+        {
+          "w": " error",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.99
+        },
+        {
+          "w": " cost",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.973
+        },
+        {
+          "w": " function.",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.988
+        },
+        {
+          "w": " For",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.303
+        },
+        {
+          "w": " linear",
+          "start": 205.62,
+          "end": 205.62,
+          "p": 0.993
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "start": 205.62,
+      "end": 209.82,
+      "text": "regression, this is a type of cost function you might get if you're training a neural network",
+      "words": [
+        {
+          "w": " regression,",
+          "start": 205.62,
+          "end": 205.72,
+          "p": 0.0
+        },
+        {
+          "w": " this",
+          "start": 205.72,
+          "end": 205.72,
+          "p": 0.146
+        },
+        {
+          "w": " is",
+          "start": 205.72,
+          "end": 206.04,
+          "p": 0.963
+        },
+        {
+          "w": " a",
+          "start": 206.04,
+          "end": 206.32,
+          "p": 0.377
+        },
+        {
+          "w": " type",
+          "start": 206.32,
+          "end": 206.62,
+          "p": 0.987
+        },
+        {
+          "w": " of",
+          "start": 206.62,
+          "end": 206.8,
+          "p": 0.998
+        },
+        {
+          "w": " cost",
+          "start": 206.8,
+          "end": 207.0,
+          "p": 0.912
+        },
+        {
+          "w": " function",
+          "start": 207.0,
+          "end": 207.26,
+          "p": 0.991
+        },
+        {
+          "w": " you",
+          "start": 207.26,
+          "end": 207.56,
+          "p": 0.981
+        },
+        {
+          "w": " might",
+          "start": 207.56,
+          "end": 207.74,
+          "p": 0.987
+        },
+        {
+          "w": " get",
+          "start": 207.74,
+          "end": 207.98,
+          "p": 0.998
+        },
+        {
+          "w": " if",
+          "start": 207.98,
+          "end": 208.62,
+          "p": 0.951
+        },
+        {
+          "w": " you're",
+          "start": 208.62,
+          "end": 208.78,
+          "p": 0.926
+        },
+        {
+          "w": " training",
+          "start": 208.78,
+          "end": 209.12,
+          "p": 0.978
+        },
+        {
+          "w": " a",
+          "start": 209.12,
+          "end": 209.32,
+          "p": 0.868
+        },
+        {
+          "w": " neural",
+          "start": 209.32,
+          "end": 209.5,
+          "p": 0.995
+        },
+        {
+          "w": " network",
+          "start": 209.5,
+          "end": 209.82,
+          "p": 0.994
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "start": 209.82,
+      "end": 220.68,
+      "text": "model. Notice the axes. That is w and b on the bottom axes. For different values of w and b,",
+      "words": [
+        {
+          "w": " model.",
+          "start": 209.82,
+          "end": 210.16,
+          "p": 0.998
+        },
+        {
+          "w": " Notice",
+          "start": 210.74,
+          "end": 211.38,
+          "p": 0.985
+        },
+        {
+          "w": " the",
+          "start": 211.38,
+          "end": 211.64,
+          "p": 0.993
+        },
+        {
+          "w": " axes.",
+          "start": 211.64,
+          "end": 212.0,
+          "p": 0.784
+        },
+        {
+          "w": " That",
+          "start": 212.56,
+          "end": 213.2,
+          "p": 0.962
+        },
+        {
+          "w": " is",
+          "start": 213.2,
+          "end": 213.5,
+          "p": 0.994
+        },
+        {
+          "w": " w",
+          "start": 213.5,
+          "end": 214.24,
+          "p": 0.275
+        },
+        {
+          "w": " and",
+          "start": 214.24,
+          "end": 214.9,
+          "p": 0.985
+        },
+        {
+          "w": " b",
+          "start": 214.9,
+          "end": 215.28,
+          "p": 0.896
+        },
+        {
+          "w": " on",
+          "start": 215.28,
+          "end": 216.06,
+          "p": 0.98
+        },
+        {
+          "w": " the",
+          "start": 216.06,
+          "end": 216.38,
+          "p": 0.998
+        },
+        {
+          "w": " bottom",
+          "start": 216.38,
+          "end": 217.0,
+          "p": 0.997
+        },
+        {
+          "w": " axes.",
+          "start": 217.0,
+          "end": 217.44,
+          "p": 0.639
+        },
+        {
+          "w": " For",
+          "start": 218.28,
+          "end": 218.92,
+          "p": 0.99
+        },
+        {
+          "w": " different",
+          "start": 218.92,
+          "end": 219.28,
+          "p": 0.993
+        },
+        {
+          "w": " values",
+          "start": 219.28,
+          "end": 219.76,
+          "p": 0.999
+        },
+        {
+          "w": " of",
+          "start": 219.76,
+          "end": 220.04,
+          "p": 0.995
+        },
+        {
+          "w": " w",
+          "start": 220.04,
+          "end": 220.26,
+          "p": 0.983
+        },
+        {
+          "w": " and",
+          "start": 220.26,
+          "end": 220.48,
+          "p": 0.99
+        },
+        {
+          "w": " b,",
+          "start": 220.48,
+          "end": 220.68,
+          "p": 0.997
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "start": 220.8,
+      "end": 228.48,
+      "text": "you get different points on this surface j of wb, where the height of the surface at some point",
+      "words": [
+        {
+          "w": " you",
+          "start": 220.8,
+          "end": 221.3,
+          "p": 0.998
+        },
+        {
+          "w": " get",
+          "start": 221.3,
+          "end": 221.5,
+          "p": 0.988
+        },
+        {
+          "w": " different",
+          "start": 221.5,
+          "end": 221.82,
+          "p": 0.998
+        },
+        {
+          "w": " points",
+          "start": 221.82,
+          "end": 222.26,
+          "p": 0.999
+        },
+        {
+          "w": " on",
+          "start": 222.26,
+          "end": 222.7,
+          "p": 0.844
+        },
+        {
+          "w": " this",
+          "start": 222.7,
+          "end": 222.88,
+          "p": 0.621
+        },
+        {
+          "w": " surface",
+          "start": 222.88,
+          "end": 223.32,
+          "p": 0.996
+        },
+        {
+          "w": " j",
+          "start": 223.32,
+          "end": 224.1,
+          "p": 0.4
+        },
+        {
+          "w": " of",
+          "start": 224.1,
+          "end": 224.76,
+          "p": 0.765
+        },
+        {
+          "w": " wb,",
+          "start": 224.76,
+          "end": 225.68,
+          "p": 0.462
+        },
+        {
+          "w": " where",
+          "start": 225.9,
+          "end": 226.54,
+          "p": 0.987
+        },
+        {
+          "w": " the",
+          "start": 226.54,
+          "end": 226.7,
+          "p": 0.997
+        },
+        {
+          "w": " height",
+          "start": 226.7,
+          "end": 226.96,
+          "p": 0.999
+        },
+        {
+          "w": " of",
+          "start": 226.96,
+          "end": 227.12,
+          "p": 0.962
+        },
+        {
+          "w": " the",
+          "start": 227.12,
+          "end": 227.2,
+          "p": 0.987
+        },
+        {
+          "w": " surface",
+          "start": 227.2,
+          "end": 227.58,
+          "p": 0.999
+        },
+        {
+          "w": " at",
+          "start": 227.58,
+          "end": 227.88,
+          "p": 0.971
+        },
+        {
+          "w": " some",
+          "start": 227.88,
+          "end": 228.1,
+          "p": 0.999
+        },
+        {
+          "w": " point",
+          "start": 228.1,
+          "end": 228.48,
+          "p": 0.98
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "start": 228.48,
+      "end": 235.56,
+      "text": "is the value of the cost function. Now, let's imagine that this surface plot is actually a",
+      "words": [
+        {
+          "w": " is",
+          "start": 228.48,
+          "end": 228.78,
+          "p": 0.987
+        },
+        {
+          "w": " the",
+          "start": 228.78,
+          "end": 229.0,
+          "p": 0.997
+        },
+        {
+          "w": " value",
+          "start": 229.0,
+          "end": 229.46,
+          "p": 0.999
+        },
+        {
+          "w": " of",
+          "start": 229.46,
+          "end": 229.8,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 229.8,
+          "end": 229.94,
+          "p": 0.998
+        },
+        {
+          "w": " cost",
+          "start": 229.94,
+          "end": 230.26,
+          "p": 0.993
+        },
+        {
+          "w": " function.",
+          "start": 230.26,
+          "end": 230.72,
+          "p": 0.998
+        },
+        {
+          "w": " Now,",
+          "start": 231.32,
+          "end": 231.96,
+          "p": 0.993
+        },
+        {
+          "w": " let's",
+          "start": 231.98,
+          "end": 232.5,
+          "p": 0.997
+        },
+        {
+          "w": " imagine",
+          "start": 232.5,
+          "end": 232.92,
+          "p": 0.999
+        },
+        {
+          "w": " that",
+          "start": 232.92,
+          "end": 233.32,
+          "p": 0.996
+        },
+        {
+          "w": " this",
+          "start": 233.32,
+          "end": 233.54,
+          "p": 0.99
+        },
+        {
+          "w": " surface",
+          "start": 233.54,
+          "end": 233.9,
+          "p": 0.996
+        },
+        {
+          "w": " plot",
+          "start": 233.9,
+          "end": 234.24,
+          "p": 0.955
+        },
+        {
+          "w": " is",
+          "start": 234.24,
+          "end": 234.88,
+          "p": 0.998
+        },
+        {
+          "w": " actually",
+          "start": 234.88,
+          "end": 235.34,
+          "p": 0.999
+        },
+        {
+          "w": " a",
+          "start": 235.34,
+          "end": 235.56,
+          "p": 0.835
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "start": 235.62,
+      "end": 242.08,
+      "text": "view of a slightly hilly outdoor park or a golf course, where the high points are hills and the",
+      "words": [
+        {
+          "w": " view",
+          "start": 235.62,
+          "end": 235.9,
+          "p": 0.844
+        },
+        {
+          "w": " of",
+          "start": 235.9,
+          "end": 236.22,
+          "p": 0.997
+        },
+        {
+          "w": " a",
+          "start": 236.22,
+          "end": 236.36,
+          "p": 0.997
+        },
+        {
+          "w": " slightly",
+          "start": 236.36,
+          "end": 236.8,
+          "p": 0.997
+        },
+        {
+          "w": " hilly",
+          "start": 236.8,
+          "end": 237.72,
+          "p": 0.992
+        },
+        {
+          "w": " outdoor",
+          "start": 237.72,
+          "end": 238.28,
+          "p": 0.995
+        },
+        {
+          "w": " park",
+          "start": 238.28,
+          "end": 238.68,
+          "p": 0.998
+        },
+        {
+          "w": " or",
+          "start": 238.68,
+          "end": 239.26,
+          "p": 0.937
+        },
+        {
+          "w": " a",
+          "start": 239.26,
+          "end": 239.32,
+          "p": 0.96
+        },
+        {
+          "w": " golf",
+          "start": 239.32,
+          "end": 239.56,
+          "p": 1.0
+        },
+        {
+          "w": " course,",
+          "start": 239.56,
+          "end": 239.88,
+          "p": 1.0
+        },
+        {
+          "w": " where",
+          "start": 240.04,
+          "end": 240.5,
+          "p": 0.877
+        },
+        {
+          "w": " the",
+          "start": 240.5,
+          "end": 240.6,
+          "p": 0.995
+        },
+        {
+          "w": " high",
+          "start": 240.6,
+          "end": 240.8,
+          "p": 0.999
+        },
+        {
+          "w": " points",
+          "start": 240.8,
+          "end": 241.14,
+          "p": 0.994
+        },
+        {
+          "w": " are",
+          "start": 241.14,
+          "end": 241.28,
+          "p": 0.99
+        },
+        {
+          "w": " hills",
+          "start": 241.28,
+          "end": 241.58,
+          "p": 0.995
+        },
+        {
+          "w": " and",
+          "start": 241.58,
+          "end": 241.94,
+          "p": 0.879
+        },
+        {
+          "w": " the",
+          "start": 241.94,
+          "end": 242.08,
+          "p": 0.943
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "start": 242.08,
+      "end": 248.68,
+      "text": "low points are valleys like so. And I'd like you to imagine, if you will, that you're physically",
+      "words": [
+        {
+          "w": " low",
+          "start": 242.08,
+          "end": 242.26,
+          "p": 0.999
+        },
+        {
+          "w": " points",
+          "start": 242.26,
+          "end": 242.54,
+          "p": 0.997
+        },
+        {
+          "w": " are",
+          "start": 242.54,
+          "end": 242.74,
+          "p": 0.992
+        },
+        {
+          "w": " valleys",
+          "start": 242.74,
+          "end": 243.14,
+          "p": 0.999
+        },
+        {
+          "w": " like",
+          "start": 243.14,
+          "end": 243.58,
+          "p": 0.619
+        },
+        {
+          "w": " so.",
+          "start": 243.58,
+          "end": 243.76,
+          "p": 0.994
+        },
+        {
+          "w": " And",
+          "start": 244.58,
+          "end": 245.18,
+          "p": 0.868
+        },
+        {
+          "w": " I'd",
+          "start": 245.18,
+          "end": 245.6,
+          "p": 0.953
+        },
+        {
+          "w": " like",
+          "start": 245.6,
+          "end": 245.86,
+          "p": 0.999
+        },
+        {
+          "w": " you",
+          "start": 245.86,
+          "end": 246.0,
+          "p": 0.994
+        },
+        {
+          "w": " to",
+          "start": 246.0,
+          "end": 246.18,
+          "p": 0.999
+        },
+        {
+          "w": " imagine,",
+          "start": 246.18,
+          "end": 246.68,
+          "p": 0.999
+        },
+        {
+          "w": " if",
+          "start": 246.8,
+          "end": 247.08,
+          "p": 0.998
+        },
+        {
+          "w": " you",
+          "start": 247.08,
+          "end": 247.16,
+          "p": 1.0
+        },
+        {
+          "w": " will,",
+          "start": 247.16,
+          "end": 247.44,
+          "p": 0.999
+        },
+        {
+          "w": " that",
+          "start": 247.56,
+          "end": 248.04,
+          "p": 0.998
+        },
+        {
+          "w": " you're",
+          "start": 248.04,
+          "end": 248.28,
+          "p": 0.992
+        },
+        {
+          "w": " physically",
+          "start": 248.28,
+          "end": 248.68,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "start": 248.68,
+      "end": 255.86,
+      "text": "standing at this point on the hill. And if it helps you to relax, imagine that there's lots of",
+      "words": [
+        {
+          "w": " standing",
+          "start": 248.68,
+          "end": 249.22,
+          "p": 0.999
+        },
+        {
+          "w": " at",
+          "start": 249.22,
+          "end": 249.96,
+          "p": 0.99
+        },
+        {
+          "w": " this",
+          "start": 249.96,
+          "end": 250.34,
+          "p": 0.999
+        },
+        {
+          "w": " point",
+          "start": 250.34,
+          "end": 250.64,
+          "p": 0.999
+        },
+        {
+          "w": " on",
+          "start": 250.64,
+          "end": 251.02,
+          "p": 0.996
+        },
+        {
+          "w": " the",
+          "start": 251.02,
+          "end": 251.26,
+          "p": 0.998
+        },
+        {
+          "w": " hill.",
+          "start": 251.26,
+          "end": 251.54,
+          "p": 0.999
+        },
+        {
+          "w": " And",
+          "start": 251.9,
+          "end": 252.5,
+          "p": 0.987
+        },
+        {
+          "w": " if",
+          "start": 252.5,
+          "end": 252.7,
+          "p": 0.98
+        },
+        {
+          "w": " it",
+          "start": 252.7,
+          "end": 252.8,
+          "p": 0.998
+        },
+        {
+          "w": " helps",
+          "start": 252.8,
+          "end": 253.12,
+          "p": 1.0
+        },
+        {
+          "w": " you",
+          "start": 253.12,
+          "end": 253.26,
+          "p": 0.999
+        },
+        {
+          "w": " to",
+          "start": 253.26,
+          "end": 253.4,
+          "p": 0.998
+        },
+        {
+          "w": " relax,",
+          "start": 253.4,
+          "end": 253.8,
+          "p": 1.0
+        },
+        {
+          "w": " imagine",
+          "start": 254.02,
+          "end": 254.6,
+          "p": 0.997
+        },
+        {
+          "w": " that",
+          "start": 254.6,
+          "end": 255.16,
+          "p": 0.989
+        },
+        {
+          "w": " there's",
+          "start": 255.16,
+          "end": 255.38,
+          "p": 0.927
+        },
+        {
+          "w": " lots",
+          "start": 255.38,
+          "end": 255.66,
+          "p": 0.996
+        },
+        {
+          "w": " of",
+          "start": 255.66,
+          "end": 255.86,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "start": 255.86,
+      "end": 264.38,
+      "text": "nice green grass and butterflies and flowers. It's a really nice hill. And your goal is to start up here",
+      "words": [
+        {
+          "w": " nice",
+          "start": 255.86,
+          "end": 256.24,
+          "p": 0.002
+        },
+        {
+          "w": " green",
+          "start": 256.24,
+          "end": 256.88,
+          "p": 0.964
+        },
+        {
+          "w": " grass",
+          "start": 256.88,
+          "end": 257.24,
+          "p": 0.995
+        },
+        {
+          "w": " and",
+          "start": 257.24,
+          "end": 257.62,
+          "p": 0.848
+        },
+        {
+          "w": " butterflies",
+          "start": 257.62,
+          "end": 258.04,
+          "p": 0.996
+        },
+        {
+          "w": " and",
+          "start": 258.04,
+          "end": 258.4,
+          "p": 0.986
+        },
+        {
+          "w": " flowers.",
+          "start": 258.4,
+          "end": 258.8,
+          "p": 0.997
+        },
+        {
+          "w": " It's",
+          "start": 259.02,
+          "end": 259.46,
+          "p": 0.945
+        },
+        {
+          "w": " a",
+          "start": 259.46,
+          "end": 259.52,
+          "p": 0.993
+        },
+        {
+          "w": " really",
+          "start": 259.52,
+          "end": 259.72,
+          "p": 0.984
+        },
+        {
+          "w": " nice",
+          "start": 259.72,
+          "end": 260.04,
+          "p": 0.999
+        },
+        {
+          "w": " hill.",
+          "start": 260.04,
+          "end": 260.34,
+          "p": 0.996
+        },
+        {
+          "w": " And",
+          "start": 260.9,
+          "end": 261.5,
+          "p": 0.94
+        },
+        {
+          "w": " your",
+          "start": 261.5,
+          "end": 261.68,
+          "p": 0.798
+        },
+        {
+          "w": " goal",
+          "start": 261.68,
+          "end": 262.0,
+          "p": 0.991
+        },
+        {
+          "w": " is",
+          "start": 262.0,
+          "end": 262.66,
+          "p": 0.984
+        },
+        {
+          "w": " to",
+          "start": 262.66,
+          "end": 262.9,
+          "p": 0.996
+        },
+        {
+          "w": " start",
+          "start": 262.9,
+          "end": 263.44,
+          "p": 0.993
+        },
+        {
+          "w": " up",
+          "start": 263.44,
+          "end": 264.06,
+          "p": 0.993
+        },
+        {
+          "w": " here",
+          "start": 264.06,
+          "end": 264.38,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "start": 265.62,
+      "end": 267.74,
+      "text": "and once you're there, you get to the bottom of one of these valleys",
+      "words": [
+        {
+          "w": " and",
+          "start": 265.62,
+          "end": 265.76,
+          "p": 0.008
+        },
+        {
+          "w": " once",
+          "start": 265.76,
+          "end": 265.76,
+          "p": 0.0
+        },
+        {
+          "w": " you're",
+          "start": 265.76,
+          "end": 265.76,
+          "p": 0.308
+        },
+        {
+          "w": " there,",
+          "start": 265.76,
+          "end": 265.76,
+          "p": 0.168
+        },
+        {
+          "w": " you",
+          "start": 265.76,
+          "end": 265.76,
+          "p": 0.764
+        },
+        {
+          "w": " get",
+          "start": 265.76,
+          "end": 265.76,
+          "p": 0.086
+        },
+        {
+          "w": " to",
+          "start": 265.76,
+          "end": 265.8,
+          "p": 0.98
+        },
+        {
+          "w": " the",
+          "start": 265.8,
+          "end": 265.98,
+          "p": 0.985
+        },
+        {
+          "w": " bottom",
+          "start": 265.98,
+          "end": 266.42,
+          "p": 0.994
+        },
+        {
+          "w": " of",
+          "start": 266.42,
+          "end": 266.78,
+          "p": 0.989
+        },
+        {
+          "w": " one",
+          "start": 266.78,
+          "end": 267.02,
+          "p": 0.981
+        },
+        {
+          "w": " of",
+          "start": 267.02,
+          "end": 267.16,
+          "p": 0.996
+        },
+        {
+          "w": " these",
+          "start": 267.16,
+          "end": 267.32,
+          "p": 0.984
+        },
+        {
+          "w": " valleys",
+          "start": 267.32,
+          "end": 267.74,
+          "p": 0.992
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "start": 267.74,
+      "end": 275.24,
+      "text": "as efficiently as possible. So, what The Gradient-Descent Árabe does is you're going to",
+      "words": [
+        {
+          "w": " as",
+          "start": 267.74,
+          "end": 268.34,
+          "p": 0.924
+        },
+        {
+          "w": " efficiently",
+          "start": 268.34,
+          "end": 268.9,
+          "p": 0.995
+        },
+        {
+          "w": " as",
+          "start": 268.9,
+          "end": 269.4,
+          "p": 0.999
+        },
+        {
+          "w": " possible.",
+          "start": 269.4,
+          "end": 269.9,
+          "p": 0.998
+        },
+        {
+          "w": " So,",
+          "start": 271.3,
+          "end": 271.9,
+          "p": 0.934
+        },
+        {
+          "w": " what",
+          "start": 272.0,
+          "end": 272.34,
+          "p": 0.997
+        },
+        {
+          "w": " The",
+          "start": 272.34,
+          "end": 272.56,
+          "p": 0.005
+        },
+        {
+          "w": " Gradient",
+          "start": 272.56,
+          "end": 272.94,
+          "p": 0.832
+        },
+        {
+          "w": "-Descent",
+          "start": 272.94,
+          "end": 273.26,
+          "p": 0.509
+        },
+        {
+          "w": " Árabe",
+          "start": 273.26,
+          "end": 273.58,
+          "p": 0.309
+        },
+        {
+          "w": " does",
+          "start": 273.58,
+          "end": 273.82,
+          "p": 0.597
+        },
+        {
+          "w": " is",
+          "start": 273.82,
+          "end": 274.22,
+          "p": 0.985
+        },
+        {
+          "w": " you're",
+          "start": 274.22,
+          "end": 274.92,
+          "p": 0.649
+        },
+        {
+          "w": " going",
+          "start": 274.92,
+          "end": 275.1,
+          "p": 0.998
+        },
+        {
+          "w": " to",
+          "start": 275.1,
+          "end": 275.24,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "start": 275.24,
+      "end": 282.8,
+      "text": "spin around 360 degrees and look around and ask yourself, if I were to take a tiny little",
+      "words": [
+        {
+          "w": " spin",
+          "start": 275.24,
+          "end": 275.58,
+          "p": 0.998
+        },
+        {
+          "w": " around",
+          "start": 275.58,
+          "end": 275.9,
+          "p": 0.979
+        },
+        {
+          "w": " 360",
+          "start": 275.9,
+          "end": 276.74,
+          "p": 0.977
+        },
+        {
+          "w": " degrees",
+          "start": 276.74,
+          "end": 277.72,
+          "p": 0.852
+        },
+        {
+          "w": " and",
+          "start": 277.72,
+          "end": 278.56,
+          "p": 0.78
+        },
+        {
+          "w": " look",
+          "start": 278.56,
+          "end": 278.88,
+          "p": 0.996
+        },
+        {
+          "w": " around",
+          "start": 278.88,
+          "end": 279.14,
+          "p": 0.999
+        },
+        {
+          "w": " and",
+          "start": 279.14,
+          "end": 279.44,
+          "p": 0.978
+        },
+        {
+          "w": " ask",
+          "start": 279.44,
+          "end": 279.68,
+          "p": 0.998
+        },
+        {
+          "w": " yourself,",
+          "start": 279.68,
+          "end": 279.98,
+          "p": 0.997
+        },
+        {
+          "w": " if",
+          "start": 280.2,
+          "end": 280.9,
+          "p": 0.569
+        },
+        {
+          "w": " I",
+          "start": 280.9,
+          "end": 281.2,
+          "p": 0.976
+        },
+        {
+          "w": " were",
+          "start": 281.2,
+          "end": 281.44,
+          "p": 0.996
+        },
+        {
+          "w": " to",
+          "start": 281.44,
+          "end": 281.62,
+          "p": 0.998
+        },
+        {
+          "w": " take",
+          "start": 281.62,
+          "end": 281.94,
+          "p": 0.996
+        },
+        {
+          "w": " a",
+          "start": 281.94,
+          "end": 282.14,
+          "p": 0.996
+        },
+        {
+          "w": " tiny",
+          "start": 282.14,
+          "end": 282.58,
+          "p": 0.994
+        },
+        {
+          "w": " little",
+          "start": 282.58,
+          "end": 282.8,
+          "p": 0.93
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "start": 282.8,
+      "end": 288.96,
+      "text": "baby step in one direction, and I want to go downhill as quickly as possible toward one of",
+      "words": [
+        {
+          "w": " baby",
+          "start": 282.8,
+          "end": 283.14,
+          "p": 0.989
+        },
+        {
+          "w": " step",
+          "start": 283.14,
+          "end": 283.42,
+          "p": 0.961
+        },
+        {
+          "w": " in",
+          "start": 283.42,
+          "end": 283.66,
+          "p": 0.997
+        },
+        {
+          "w": " one",
+          "start": 283.66,
+          "end": 283.84,
+          "p": 0.998
+        },
+        {
+          "w": " direction,",
+          "start": 283.84,
+          "end": 284.32,
+          "p": 1.0
+        },
+        {
+          "w": " and",
+          "start": 284.56,
+          "end": 285.28,
+          "p": 0.991
+        },
+        {
+          "w": " I",
+          "start": 285.28,
+          "end": 285.4,
+          "p": 0.989
+        },
+        {
+          "w": " want",
+          "start": 285.4,
+          "end": 285.6,
+          "p": 0.971
+        },
+        {
+          "w": " to",
+          "start": 285.6,
+          "end": 285.76,
+          "p": 0.998
+        },
+        {
+          "w": " go",
+          "start": 285.76,
+          "end": 285.92,
+          "p": 0.998
+        },
+        {
+          "w": " downhill",
+          "start": 285.92,
+          "end": 286.36,
+          "p": 0.982
+        },
+        {
+          "w": " as",
+          "start": 286.36,
+          "end": 286.86,
+          "p": 0.992
+        },
+        {
+          "w": " quickly",
+          "start": 286.86,
+          "end": 287.2,
+          "p": 0.998
+        },
+        {
+          "w": " as",
+          "start": 287.2,
+          "end": 287.44,
+          "p": 0.999
+        },
+        {
+          "w": " possible",
+          "start": 287.44,
+          "end": 287.86,
+          "p": 1.0
+        },
+        {
+          "w": " toward",
+          "start": 287.86,
+          "end": 288.58,
+          "p": 0.748
+        },
+        {
+          "w": " one",
+          "start": 288.58,
+          "end": 288.84,
+          "p": 0.998
+        },
+        {
+          "w": " of",
+          "start": 288.84,
+          "end": 288.96,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "start": 288.96,
+      "end": 293.46,
+      "text": "these valleys, what direction do I choose to take that baby step?",
+      "words": [
+        {
+          "w": " these",
+          "start": 288.96,
+          "end": 289.1,
+          "p": 0.997
+        },
+        {
+          "w": " valleys,",
+          "start": 289.1,
+          "end": 289.48,
+          "p": 0.998
+        },
+        {
+          "w": " what",
+          "start": 289.74,
+          "end": 290.24,
+          "p": 0.98
+        },
+        {
+          "w": " direction",
+          "start": 290.24,
+          "end": 290.76,
+          "p": 1.0
+        },
+        {
+          "w": " do",
+          "start": 290.76,
+          "end": 291.34,
+          "p": 0.994
+        },
+        {
+          "w": " I",
+          "start": 291.34,
+          "end": 291.52,
+          "p": 0.997
+        },
+        {
+          "w": " choose",
+          "start": 291.52,
+          "end": 291.86,
+          "p": 0.996
+        },
+        {
+          "w": " to",
+          "start": 291.86,
+          "end": 292.16,
+          "p": 0.999
+        },
+        {
+          "w": " take",
+          "start": 292.16,
+          "end": 292.42,
+          "p": 0.999
+        },
+        {
+          "w": " that",
+          "start": 292.42,
+          "end": 292.72,
+          "p": 0.997
+        },
+        {
+          "w": " baby",
+          "start": 292.72,
+          "end": 293.12,
+          "p": 0.994
+        },
+        {
+          "w": " step?",
+          "start": 293.12,
+          "end": 293.46,
+          "p": 0.995
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "start": 293.7,
+      "end": 295.6,
+      "text": "Well, if you want to walk down a hill in this direction, it's actually quite easy and it can't be",
+      "words": [
+        {
+          "w": " Well,",
+          "start": 293.7,
+          "end": 294.06,
+          "p": 0.981
+        },
+        {
+          "w": " if",
+          "start": 294.2,
+          "end": 294.54,
+          "p": 0.997
+        },
+        {
+          "w": " you",
+          "start": 294.54,
+          "end": 294.7,
+          "p": 0.999
+        },
+        {
+          "w": " want",
+          "start": 294.7,
+          "end": 294.92,
+          "p": 0.998
+        },
+        {
+          "w": " to",
+          "start": 294.92,
+          "end": 295.1,
+          "p": 0.999
+        },
+        {
+          "w": " walk",
+          "start": 295.1,
+          "end": 295.3,
+          "p": 0.998
+        },
+        {
+          "w": " down",
+          "start": 295.3,
+          "end": 295.52,
+          "p": 0.977
+        },
+        {
+          "w": " a",
+          "start": 295.52,
+          "end": 295.6,
+          "p": 0.161
+        },
+        {
+          "w": " hill",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.09
+        },
+        {
+          "w": " in",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.025
+        },
+        {
+          "w": " this",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.03
+        },
+        {
+          "w": " direction,",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.403
+        },
+        {
+          "w": " it's",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.344
+        },
+        {
+          "w": " actually",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.028
+        },
+        {
+          "w": " quite",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.105
+        },
+        {
+          "w": " easy",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.709
+        },
+        {
+          "w": " and",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.01
+        },
+        {
+          "w": " it",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.109
+        },
+        {
+          "w": " can't",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.011
+        },
+        {
+          "w": " be",
+          "start": 295.6,
+          "end": 295.6,
+          "p": 0.742
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "start": 295.6,
+      "end": 301.08,
+      "text": "this hill as efficiently as possible it turns out that if you're standing at this point in the hill",
+      "words": [
+        {
+          "w": " this",
+          "start": 295.6,
+          "end": 295.8,
+          "p": 0.882
+        },
+        {
+          "w": " hill",
+          "start": 295.8,
+          "end": 296.1,
+          "p": 0.929
+        },
+        {
+          "w": " as",
+          "start": 296.1,
+          "end": 296.34,
+          "p": 0.993
+        },
+        {
+          "w": " efficiently",
+          "start": 296.34,
+          "end": 296.82,
+          "p": 0.993
+        },
+        {
+          "w": " as",
+          "start": 296.82,
+          "end": 297.22,
+          "p": 0.999
+        },
+        {
+          "w": " possible",
+          "start": 297.22,
+          "end": 297.6,
+          "p": 1.0
+        },
+        {
+          "w": " it",
+          "start": 297.6,
+          "end": 298.28,
+          "p": 0.195
+        },
+        {
+          "w": " turns",
+          "start": 298.28,
+          "end": 298.56,
+          "p": 0.999
+        },
+        {
+          "w": " out",
+          "start": 298.56,
+          "end": 298.82,
+          "p": 0.999
+        },
+        {
+          "w": " that",
+          "start": 298.82,
+          "end": 299.2,
+          "p": 0.995
+        },
+        {
+          "w": " if",
+          "start": 299.2,
+          "end": 299.5,
+          "p": 0.992
+        },
+        {
+          "w": " you're",
+          "start": 299.5,
+          "end": 299.66,
+          "p": 0.995
+        },
+        {
+          "w": " standing",
+          "start": 299.66,
+          "end": 300.0,
+          "p": 1.0
+        },
+        {
+          "w": " at",
+          "start": 300.0,
+          "end": 300.24,
+          "p": 0.999
+        },
+        {
+          "w": " this",
+          "start": 300.24,
+          "end": 300.4,
+          "p": 1.0
+        },
+        {
+          "w": " point",
+          "start": 300.4,
+          "end": 300.62,
+          "p": 1.0
+        },
+        {
+          "w": " in",
+          "start": 300.62,
+          "end": 300.78,
+          "p": 0.971
+        },
+        {
+          "w": " the",
+          "start": 300.78,
+          "end": 300.88,
+          "p": 0.999
+        },
+        {
+          "w": " hill",
+          "start": 300.88,
+          "end": 301.08,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "start": 301.08,
+      "end": 306.1,
+      "text": "and you look around you may notice that the best direction to take your next step downhill",
+      "words": [
+        {
+          "w": " and",
+          "start": 301.08,
+          "end": 301.48,
+          "p": 0.978
+        },
+        {
+          "w": " you",
+          "start": 301.48,
+          "end": 301.66,
+          "p": 0.999
+        },
+        {
+          "w": " look",
+          "start": 301.66,
+          "end": 301.86,
+          "p": 1.0
+        },
+        {
+          "w": " around",
+          "start": 301.86,
+          "end": 302.08,
+          "p": 1.0
+        },
+        {
+          "w": " you",
+          "start": 302.08,
+          "end": 302.84,
+          "p": 0.886
+        },
+        {
+          "w": " may",
+          "start": 302.84,
+          "end": 303.04,
+          "p": 0.96
+        },
+        {
+          "w": " notice",
+          "start": 303.04,
+          "end": 303.38,
+          "p": 0.999
+        },
+        {
+          "w": " that",
+          "start": 303.38,
+          "end": 303.7,
+          "p": 0.997
+        },
+        {
+          "w": " the",
+          "start": 303.7,
+          "end": 303.84,
+          "p": 1.0
+        },
+        {
+          "w": " best",
+          "start": 303.84,
+          "end": 304.06,
+          "p": 1.0
+        },
+        {
+          "w": " direction",
+          "start": 304.06,
+          "end": 304.5,
+          "p": 1.0
+        },
+        {
+          "w": " to",
+          "start": 304.5,
+          "end": 304.8,
+          "p": 1.0
+        },
+        {
+          "w": " take",
+          "start": 304.8,
+          "end": 305.02,
+          "p": 1.0
+        },
+        {
+          "w": " your",
+          "start": 305.02,
+          "end": 305.2,
+          "p": 0.997
+        },
+        {
+          "w": " next",
+          "start": 305.2,
+          "end": 305.42,
+          "p": 0.999
+        },
+        {
+          "w": " step",
+          "start": 305.42,
+          "end": 305.72,
+          "p": 1.0
+        },
+        {
+          "w": " downhill",
+          "start": 305.72,
+          "end": 306.1,
+          "p": 0.995
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "start": 306.5,
+      "end": 313.76,
+      "text": "is roughly that direction mathematically this is the direction of steepest descent and it means",
+      "words": [
+        {
+          "w": " is",
+          "start": 306.5,
+          "end": 306.8,
+          "p": 0.999
+        },
+        {
+          "w": " roughly",
+          "start": 306.8,
+          "end": 307.14,
+          "p": 0.999
+        },
+        {
+          "w": " that",
+          "start": 307.14,
+          "end": 307.48,
+          "p": 0.994
+        },
+        {
+          "w": " direction",
+          "start": 307.48,
+          "end": 307.98,
+          "p": 1.0
+        },
+        {
+          "w": " mathematically",
+          "start": 307.98,
+          "end": 309.22,
+          "p": 0.385
+        },
+        {
+          "w": " this",
+          "start": 309.22,
+          "end": 310.1,
+          "p": 0.989
+        },
+        {
+          "w": " is",
+          "start": 310.1,
+          "end": 310.24,
+          "p": 1.0
+        },
+        {
+          "w": " the",
+          "start": 310.24,
+          "end": 310.4,
+          "p": 1.0
+        },
+        {
+          "w": " direction",
+          "start": 310.4,
+          "end": 310.78,
+          "p": 0.999
+        },
+        {
+          "w": " of",
+          "start": 310.78,
+          "end": 311.28,
+          "p": 1.0
+        },
+        {
+          "w": " steepest",
+          "start": 311.28,
+          "end": 312.0,
+          "p": 0.999
+        },
+        {
+          "w": " descent",
+          "start": 312.0,
+          "end": 312.26,
+          "p": 0.989
+        },
+        {
+          "w": " and",
+          "start": 312.26,
+          "end": 313.46,
+          "p": 0.992
+        },
+        {
+          "w": " it",
+          "start": 313.46,
+          "end": 313.52,
+          "p": 0.999
+        },
+        {
+          "w": " means",
+          "start": 313.52,
+          "end": 313.76,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "start": 313.76,
+      "end": 319.74,
+      "text": "that when you take a tiny baby little step this takes you downhill faster than a tiny little baby",
+      "words": [
+        {
+          "w": " that",
+          "start": 313.76,
+          "end": 314.02,
+          "p": 1.0
+        },
+        {
+          "w": " when",
+          "start": 314.02,
+          "end": 314.22,
+          "p": 1.0
+        },
+        {
+          "w": " you",
+          "start": 314.22,
+          "end": 314.34,
+          "p": 1.0
+        },
+        {
+          "w": " take",
+          "start": 314.34,
+          "end": 314.52,
+          "p": 1.0
+        },
+        {
+          "w": " a",
+          "start": 314.52,
+          "end": 314.68,
+          "p": 1.0
+        },
+        {
+          "w": " tiny",
+          "start": 314.68,
+          "end": 315.0,
+          "p": 1.0
+        },
+        {
+          "w": " baby",
+          "start": 315.0,
+          "end": 315.32,
+          "p": 0.997
+        },
+        {
+          "w": " little",
+          "start": 315.32,
+          "end": 315.64,
+          "p": 0.996
+        },
+        {
+          "w": " step",
+          "start": 315.64,
+          "end": 315.96,
+          "p": 1.0
+        },
+        {
+          "w": " this",
+          "start": 315.96,
+          "end": 316.62,
+          "p": 0.998
+        },
+        {
+          "w": " takes",
+          "start": 316.62,
+          "end": 316.84,
+          "p": 1.0
+        },
+        {
+          "w": " you",
+          "start": 316.84,
+          "end": 317.04,
+          "p": 1.0
+        },
+        {
+          "w": " downhill",
+          "start": 317.04,
+          "end": 317.46,
+          "p": 0.959
+        },
+        {
+          "w": " faster",
+          "start": 317.46,
+          "end": 317.92,
+          "p": 1.0
+        },
+        {
+          "w": " than",
+          "start": 317.92,
+          "end": 318.72,
+          "p": 0.996
+        },
+        {
+          "w": " a",
+          "start": 318.72,
+          "end": 318.86,
+          "p": 0.956
+        },
+        {
+          "w": " tiny",
+          "start": 318.86,
+          "end": 319.12,
+          "p": 1.0
+        },
+        {
+          "w": " little",
+          "start": 319.12,
+          "end": 319.42,
+          "p": 1.0
+        },
+        {
+          "w": " baby",
+          "start": 319.42,
+          "end": 319.74,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "start": 319.74,
+      "end": 326.56,
+      "text": "step you could have taken in any other direction so after taking this first step you're now at this",
+      "words": [
+        {
+          "w": " step",
+          "start": 319.74,
+          "end": 320.02,
+          "p": 0.366
+        },
+        {
+          "w": " you",
+          "start": 320.02,
+          "end": 320.2,
+          "p": 0.978
+        },
+        {
+          "w": " could",
+          "start": 320.2,
+          "end": 320.36,
+          "p": 0.994
+        },
+        {
+          "w": " have",
+          "start": 320.36,
+          "end": 320.46,
+          "p": 0.977
+        },
+        {
+          "w": " taken",
+          "start": 320.46,
+          "end": 320.8,
+          "p": 0.998
+        },
+        {
+          "w": " in",
+          "start": 320.8,
+          "end": 321.0,
+          "p": 0.988
+        },
+        {
+          "w": " any",
+          "start": 321.0,
+          "end": 321.2,
+          "p": 0.997
+        },
+        {
+          "w": " other",
+          "start": 321.2,
+          "end": 321.42,
+          "p": 0.998
+        },
+        {
+          "w": " direction",
+          "start": 321.42,
+          "end": 321.78,
+          "p": 0.997
+        },
+        {
+          "w": " so",
+          "start": 321.78,
+          "end": 323.2,
+          "p": 0.046
+        },
+        {
+          "w": " after",
+          "start": 323.2,
+          "end": 323.78,
+          "p": 0.993
+        },
+        {
+          "w": " taking",
+          "start": 323.78,
+          "end": 324.3,
+          "p": 0.999
+        },
+        {
+          "w": " this",
+          "start": 324.3,
+          "end": 324.66,
+          "p": 0.999
+        },
+        {
+          "w": " first",
+          "start": 324.66,
+          "end": 324.96,
+          "p": 0.999
+        },
+        {
+          "w": " step",
+          "start": 324.96,
+          "end": 325.3,
+          "p": 0.999
+        },
+        {
+          "w": " you're",
+          "start": 325.3,
+          "end": 325.9,
+          "p": 0.915
+        },
+        {
+          "w": " now",
+          "start": 325.9,
+          "end": 326.1,
+          "p": 0.998
+        },
+        {
+          "w": " at",
+          "start": 326.1,
+          "end": 326.3,
+          "p": 0.992
+        },
+        {
+          "w": " this",
+          "start": 326.3,
+          "end": 326.56,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "start": 326.56,
+      "end": 334.06,
+      "text": "point on the hill over here now let's repeat the process standing at this new point you're going to",
+      "words": [
+        {
+          "w": " point",
+          "start": 326.56,
+          "end": 326.9,
+          "p": 0.999
+        },
+        {
+          "w": " on",
+          "start": 326.9,
+          "end": 327.34,
+          "p": 0.992
+        },
+        {
+          "w": " the",
+          "start": 327.34,
+          "end": 327.5,
+          "p": 0.999
+        },
+        {
+          "w": " hill",
+          "start": 327.5,
+          "end": 327.72,
+          "p": 0.994
+        },
+        {
+          "w": " over",
+          "start": 327.72,
+          "end": 328.22,
+          "p": 0.997
+        },
+        {
+          "w": " here",
+          "start": 328.22,
+          "end": 328.54,
+          "p": 0.999
+        },
+        {
+          "w": " now",
+          "start": 328.54,
+          "end": 329.72,
+          "p": 0.91
+        },
+        {
+          "w": " let's",
+          "start": 329.72,
+          "end": 330.18,
+          "p": 0.998
+        },
+        {
+          "w": " repeat",
+          "start": 330.18,
+          "end": 330.42,
+          "p": 1.0
+        },
+        {
+          "w": " the",
+          "start": 330.42,
+          "end": 330.6,
+          "p": 0.999
+        },
+        {
+          "w": " process",
+          "start": 330.6,
+          "end": 330.92,
+          "p": 1.0
+        },
+        {
+          "w": " standing",
+          "start": 330.92,
+          "end": 331.88,
+          "p": 0.97
+        },
+        {
+          "w": " at",
+          "start": 331.88,
+          "end": 332.2,
+          "p": 1.0
+        },
+        {
+          "w": " this",
+          "start": 332.2,
+          "end": 332.4,
+          "p": 1.0
+        },
+        {
+          "w": " new",
+          "start": 332.4,
+          "end": 332.64,
+          "p": 0.999
+        },
+        {
+          "w": " point",
+          "start": 332.64,
+          "end": 333.02,
+          "p": 1.0
+        },
+        {
+          "w": " you're",
+          "start": 333.02,
+          "end": 333.68,
+          "p": 0.997
+        },
+        {
+          "w": " going",
+          "start": 333.68,
+          "end": 333.86,
+          "p": 1.0
+        },
+        {
+          "w": " to",
+          "start": 333.86,
+          "end": 334.06,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "start": 334.06,
+      "end": 341.2,
+      "text": "again spin around 360 degrees and ask yourself in what direction would i take the next little baby",
+      "words": [
+        {
+          "w": " again",
+          "start": 334.06,
+          "end": 334.34,
+          "p": 0.993
+        },
+        {
+          "w": " spin",
+          "start": 334.34,
+          "end": 335.08,
+          "p": 0.999
+        },
+        {
+          "w": " around",
+          "start": 335.08,
+          "end": 335.36,
+          "p": 0.998
+        },
+        {
+          "w": " 360",
+          "start": 335.36,
+          "end": 336.1,
+          "p": 0.998
+        },
+        {
+          "w": " degrees",
+          "start": 336.1,
+          "end": 336.74,
+          "p": 0.987
+        },
+        {
+          "w": " and",
+          "start": 336.74,
+          "end": 337.46,
+          "p": 0.998
+        },
+        {
+          "w": " ask",
+          "start": 337.46,
+          "end": 337.66,
+          "p": 0.987
+        },
+        {
+          "w": " yourself",
+          "start": 337.66,
+          "end": 337.92,
+          "p": 0.999
+        },
+        {
+          "w": " in",
+          "start": 337.92,
+          "end": 338.56,
+          "p": 0.99
+        },
+        {
+          "w": " what",
+          "start": 338.56,
+          "end": 338.78,
+          "p": 0.999
+        },
+        {
+          "w": " direction",
+          "start": 338.78,
+          "end": 339.18,
+          "p": 1.0
+        },
+        {
+          "w": " would",
+          "start": 339.18,
+          "end": 339.46,
+          "p": 0.985
+        },
+        {
+          "w": " i",
+          "start": 339.46,
+          "end": 339.6,
+          "p": 0.794
+        },
+        {
+          "w": " take",
+          "start": 339.6,
+          "end": 339.86,
+          "p": 1.0
+        },
+        {
+          "w": " the",
+          "start": 339.86,
+          "end": 340.14,
+          "p": 1.0
+        },
+        {
+          "w": " next",
+          "start": 340.14,
+          "end": 340.42,
+          "p": 0.997
+        },
+        {
+          "w": " little",
+          "start": 340.42,
+          "end": 340.92,
+          "p": 1.0
+        },
+        {
+          "w": " baby",
+          "start": 340.92,
+          "end": 341.2,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "start": 341.2,
+      "end": 348.54,
+      "text": "step in order to move downhill and if you do that and take another step you end up moving a bit in",
+      "words": [
+        {
+          "w": " step",
+          "start": 341.2,
+          "end": 341.48,
+          "p": 1.0
+        },
+        {
+          "w": " in",
+          "start": 341.48,
+          "end": 342.08,
+          "p": 1.0
+        },
+        {
+          "w": " order",
+          "start": 342.08,
+          "end": 342.3,
+          "p": 1.0
+        },
+        {
+          "w": " to",
+          "start": 342.3,
+          "end": 342.68,
+          "p": 1.0
+        },
+        {
+          "w": " move",
+          "start": 342.68,
+          "end": 342.96,
+          "p": 1.0
+        },
+        {
+          "w": " downhill",
+          "start": 342.96,
+          "end": 343.42,
+          "p": 0.932
+        },
+        {
+          "w": " and",
+          "start": 343.42,
+          "end": 344.64,
+          "p": 0.995
+        },
+        {
+          "w": " if",
+          "start": 344.64,
+          "end": 344.86,
+          "p": 1.0
+        },
+        {
+          "w": " you",
+          "start": 344.86,
+          "end": 344.98,
+          "p": 1.0
+        },
+        {
+          "w": " do",
+          "start": 344.98,
+          "end": 345.14,
+          "p": 1.0
+        },
+        {
+          "w": " that",
+          "start": 345.14,
+          "end": 345.38,
+          "p": 1.0
+        },
+        {
+          "w": " and",
+          "start": 345.38,
+          "end": 345.76,
+          "p": 1.0
+        },
+        {
+          "w": " take",
+          "start": 345.76,
+          "end": 345.98,
+          "p": 1.0
+        },
+        {
+          "w": " another",
+          "start": 345.98,
+          "end": 346.26,
+          "p": 1.0
+        },
+        {
+          "w": " step",
+          "start": 346.26,
+          "end": 346.6,
+          "p": 1.0
+        },
+        {
+          "w": " you",
+          "start": 346.6,
+          "end": 347.2,
+          "p": 0.999
+        },
+        {
+          "w": " end",
+          "start": 347.2,
+          "end": 347.36,
+          "p": 0.999
+        },
+        {
+          "w": " up",
+          "start": 347.36,
+          "end": 347.5,
+          "p": 1.0
+        },
+        {
+          "w": " moving",
+          "start": 347.5,
+          "end": 347.74,
+          "p": 0.999
+        },
+        {
+          "w": " a",
+          "start": 347.74,
+          "end": 347.98,
+          "p": 0.999
+        },
+        {
+          "w": " bit",
+          "start": 347.98,
+          "end": 348.14,
+          "p": 0.999
+        },
+        {
+          "w": " in",
+          "start": 348.14,
+          "end": 348.54,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "start": 348.54,
+      "end": 349.52,
+      "text": "that direction",
+      "words": [
+        {
+          "w": " that",
+          "start": 348.54,
+          "end": 349.12,
+          "p": 1.0
+        },
+        {
+          "w": " direction",
+          "start": 349.12,
+          "end": 349.52,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "start": 350.3,
+      "end": 356.7,
+      "text": "and you can keep going from this new point you can again look around and decide what direction",
+      "words": [
+        {
+          "w": " and",
+          "start": 350.3,
+          "end": 350.64,
+          "p": 0.894
+        },
+        {
+          "w": " you",
+          "start": 350.64,
+          "end": 350.98,
+          "p": 0.974
+        },
+        {
+          "w": " can",
+          "start": 350.98,
+          "end": 351.2,
+          "p": 0.996
+        },
+        {
+          "w": " keep",
+          "start": 351.2,
+          "end": 351.42,
+          "p": 0.999
+        },
+        {
+          "w": " going",
+          "start": 351.42,
+          "end": 351.78,
+          "p": 1.0
+        },
+        {
+          "w": " from",
+          "start": 351.78,
+          "end": 352.48,
+          "p": 0.122
+        },
+        {
+          "w": " this",
+          "start": 352.48,
+          "end": 353.34,
+          "p": 0.997
+        },
+        {
+          "w": " new",
+          "start": 353.34,
+          "end": 353.62,
+          "p": 0.995
+        },
+        {
+          "w": " point",
+          "start": 353.62,
+          "end": 353.9,
+          "p": 0.992
+        },
+        {
+          "w": " you",
+          "start": 353.9,
+          "end": 354.14,
+          "p": 0.846
+        },
+        {
+          "w": " can",
+          "start": 354.14,
+          "end": 354.32,
+          "p": 1.0
+        },
+        {
+          "w": " again",
+          "start": 354.32,
+          "end": 354.54,
+          "p": 0.999
+        },
+        {
+          "w": " look",
+          "start": 354.54,
+          "end": 355.0,
+          "p": 0.999
+        },
+        {
+          "w": " around",
+          "start": 355.0,
+          "end": 355.28,
+          "p": 1.0
+        },
+        {
+          "w": " and",
+          "start": 355.28,
+          "end": 355.68,
+          "p": 0.999
+        },
+        {
+          "w": " decide",
+          "start": 355.68,
+          "end": 355.98,
+          "p": 1.0
+        },
+        {
+          "w": " what",
+          "start": 355.98,
+          "end": 356.28,
+          "p": 0.999
+        },
+        {
+          "w": " direction",
+          "start": 356.28,
+          "end": 356.7,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "start": 356.7,
+      "end": 364.2,
+      "text": "would take you downhill most quickly take another step another step and so on until you find yourself",
+      "words": [
+        {
+          "w": " would",
+          "start": 356.7,
+          "end": 357.08,
+          "p": 0.826
+        },
+        {
+          "w": " take",
+          "start": 357.08,
+          "end": 357.26,
+          "p": 0.999
+        },
+        {
+          "w": " you",
+          "start": 357.26,
+          "end": 357.46,
+          "p": 1.0
+        },
+        {
+          "w": " downhill",
+          "start": 357.46,
+          "end": 357.82,
+          "p": 0.988
+        },
+        {
+          "w": " most",
+          "start": 357.82,
+          "end": 358.14,
+          "p": 0.998
+        },
+        {
+          "w": " quickly",
+          "start": 358.14,
+          "end": 358.58,
+          "p": 1.0
+        },
+        {
+          "w": " take",
+          "start": 358.58,
+          "end": 359.6,
+          "p": 0.93
+        },
+        {
+          "w": " another",
+          "start": 359.6,
+          "end": 359.82,
+          "p": 1.0
+        },
+        {
+          "w": " step",
+          "start": 359.82,
+          "end": 360.24,
+          "p": 1.0
+        },
+        {
+          "w": " another",
+          "start": 360.24,
+          "end": 360.86,
+          "p": 0.977
+        },
+        {
+          "w": " step",
+          "start": 360.86,
+          "end": 361.24,
+          "p": 1.0
+        },
+        {
+          "w": " and",
+          "start": 361.24,
+          "end": 361.96,
+          "p": 0.999
+        },
+        {
+          "w": " so",
+          "start": 361.96,
+          "end": 362.1,
+          "p": 1.0
+        },
+        {
+          "w": " on",
+          "start": 362.1,
+          "end": 362.44,
+          "p": 1.0
+        },
+        {
+          "w": " until",
+          "start": 362.44,
+          "end": 363.34,
+          "p": 0.999
+        },
+        {
+          "w": " you",
+          "start": 363.34,
+          "end": 363.64,
+          "p": 1.0
+        },
+        {
+          "w": " find",
+          "start": 363.64,
+          "end": 363.9,
+          "p": 1.0
+        },
+        {
+          "w": " yourself",
+          "start": 363.9,
+          "end": 364.2,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "start": 364.2,
+      "end": 370.76,
+      "text": "at the bottom of this valley at this local minimum right here what you just did was go through",
+      "words": [
+        {
+          "w": " at",
+          "start": 364.2,
+          "end": 364.52,
+          "p": 1.0
+        },
+        {
+          "w": " the",
+          "start": 364.52,
+          "end": 364.62,
+          "p": 1.0
+        },
+        {
+          "w": " bottom",
+          "start": 364.62,
+          "end": 364.96,
+          "p": 1.0
+        },
+        {
+          "w": " of",
+          "start": 364.96,
+          "end": 365.18,
+          "p": 1.0
+        },
+        {
+          "w": " this",
+          "start": 365.18,
+          "end": 365.32,
+          "p": 1.0
+        },
+        {
+          "w": " valley",
+          "start": 365.32,
+          "end": 365.68,
+          "p": 0.993
+        },
+        {
+          "w": " at",
+          "start": 365.68,
+          "end": 366.28,
+          "p": 0.998
+        },
+        {
+          "w": " this",
+          "start": 366.28,
+          "end": 366.48,
+          "p": 1.0
+        },
+        {
+          "w": " local",
+          "start": 366.48,
+          "end": 366.84,
+          "p": 0.999
+        },
+        {
+          "w": " minimum",
+          "start": 366.84,
+          "end": 367.2,
+          "p": 0.999
+        },
+        {
+          "w": " right",
+          "start": 367.2,
+          "end": 367.94,
+          "p": 0.999
+        },
+        {
+          "w": " here",
+          "start": 367.94,
+          "end": 368.3,
+          "p": 1.0
+        },
+        {
+          "w": " what",
+          "start": 368.3,
+          "end": 369.56,
+          "p": 0.982
+        },
+        {
+          "w": " you",
+          "start": 369.56,
+          "end": 369.68,
+          "p": 1.0
+        },
+        {
+          "w": " just",
+          "start": 369.68,
+          "end": 369.94,
+          "p": 1.0
+        },
+        {
+          "w": " did",
+          "start": 369.94,
+          "end": 370.1,
+          "p": 1.0
+        },
+        {
+          "w": " was",
+          "start": 370.1,
+          "end": 370.32,
+          "p": 1.0
+        },
+        {
+          "w": " go",
+          "start": 370.32,
+          "end": 370.5,
+          "p": 1.0
+        },
+        {
+          "w": " through",
+          "start": 370.5,
+          "end": 370.76,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "start": 370.76,
+      "end": 376.86,
+      "text": "multiple steps of gradient descent it turns out gradient descent has an interesting property",
+      "words": [
+        {
+          "w": " multiple",
+          "start": 370.76,
+          "end": 371.16,
+          "p": 1.0
+        },
+        {
+          "w": " steps",
+          "start": 371.16,
+          "end": 371.58,
+          "p": 1.0
+        },
+        {
+          "w": " of",
+          "start": 371.58,
+          "end": 372.0,
+          "p": 1.0
+        },
+        {
+          "w": " gradient",
+          "start": 372.0,
+          "end": 372.3,
+          "p": 0.977
+        },
+        {
+          "w": " descent",
+          "start": 372.3,
+          "end": 372.62,
+          "p": 0.995
+        },
+        {
+          "w": " it",
+          "start": 372.62,
+          "end": 374.16,
+          "p": 0.981
+        },
+        {
+          "w": " turns",
+          "start": 374.16,
+          "end": 374.44,
+          "p": 1.0
+        },
+        {
+          "w": " out",
+          "start": 374.44,
+          "end": 374.76,
+          "p": 1.0
+        },
+        {
+          "w": " gradient",
+          "start": 374.76,
+          "end": 375.16,
+          "p": 0.98
+        },
+        {
+          "w": " descent",
+          "start": 375.16,
+          "end": 375.48,
+          "p": 0.994
+        },
+        {
+          "w": " has",
+          "start": 375.48,
+          "end": 375.94,
+          "p": 1.0
+        },
+        {
+          "w": " an",
+          "start": 375.94,
+          "end": 376.12,
+          "p": 1.0
+        },
+        {
+          "w": " interesting",
+          "start": 376.12,
+          "end": 376.46,
+          "p": 1.0
+        },
+        {
+          "w": " property",
+          "start": 376.46,
+          "end": 376.86,
+          "p": 0.983
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "start": 378.24,
+      "end": 379.56,
+      "text": "remember that",
+      "words": [
+        {
+          "w": " remember",
+          "start": 378.24,
+          "end": 378.92,
+          "p": 0.988
+        },
+        {
+          "w": " that",
+          "start": 378.92,
+          "end": 379.56,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "start": 379.74,
+      "end": 386.2,
+      "text": "you can choose a starting point at the surface by choosing starting values with parameters w and b",
+      "words": [
+        {
+          "w": " you",
+          "start": 379.74,
+          "end": 379.96,
+          "p": 0.804
+        },
+        {
+          "w": " can",
+          "start": 379.96,
+          "end": 380.18,
+          "p": 0.989
+        },
+        {
+          "w": " choose",
+          "start": 380.18,
+          "end": 380.68,
+          "p": 0.993
+        },
+        {
+          "w": " a",
+          "start": 380.68,
+          "end": 380.98,
+          "p": 0.993
+        },
+        {
+          "w": " starting",
+          "start": 380.98,
+          "end": 381.4,
+          "p": 0.997
+        },
+        {
+          "w": " point",
+          "start": 381.4,
+          "end": 381.72,
+          "p": 0.999
+        },
+        {
+          "w": " at",
+          "start": 381.72,
+          "end": 382.18,
+          "p": 0.993
+        },
+        {
+          "w": " the",
+          "start": 382.18,
+          "end": 382.28,
+          "p": 0.997
+        },
+        {
+          "w": " surface",
+          "start": 382.28,
+          "end": 382.7,
+          "p": 0.997
+        },
+        {
+          "w": " by",
+          "start": 382.7,
+          "end": 383.1,
+          "p": 0.989
+        },
+        {
+          "w": " choosing",
+          "start": 383.1,
+          "end": 383.52,
+          "p": 0.997
+        },
+        {
+          "w": " starting",
+          "start": 383.52,
+          "end": 383.88,
+          "p": 0.988
+        },
+        {
+          "w": " values",
+          "start": 383.88,
+          "end": 384.26,
+          "p": 0.998
+        },
+        {
+          "w": " with",
+          "start": 384.26,
+          "end": 384.86,
+          "p": 0.197
+        },
+        {
+          "w": " parameters",
+          "start": 384.86,
+          "end": 385.16,
+          "p": 0.811
+        },
+        {
+          "w": " w",
+          "start": 385.16,
+          "end": 385.7,
+          "p": 0.645
+        },
+        {
+          "w": " and",
+          "start": 385.7,
+          "end": 385.94,
+          "p": 0.995
+        },
+        {
+          "w": " b",
+          "start": 385.94,
+          "end": 386.2,
+          "p": 0.991
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "start": 386.2,
+      "end": 393.12,
+      "text": "when you perform gradient descent a moment ago you have started at this point over here right",
+      "words": [
+        {
+          "w": " when",
+          "start": 386.2,
+          "end": 387.26,
+          "p": 0.077
+        },
+        {
+          "w": " you",
+          "start": 387.26,
+          "end": 387.46,
+          "p": 0.998
+        },
+        {
+          "w": " perform",
+          "start": 387.46,
+          "end": 387.84,
+          "p": 0.656
+        },
+        {
+          "w": " gradient",
+          "start": 387.84,
+          "end": 388.26,
+          "p": 0.988
+        },
+        {
+          "w": " descent",
+          "start": 388.26,
+          "end": 388.6,
+          "p": 0.998
+        },
+        {
+          "w": " a",
+          "start": 388.6,
+          "end": 388.84,
+          "p": 0.963
+        },
+        {
+          "w": " moment",
+          "start": 388.84,
+          "end": 389.1,
+          "p": 0.999
+        },
+        {
+          "w": " ago",
+          "start": 389.1,
+          "end": 389.42,
+          "p": 0.999
+        },
+        {
+          "w": " you",
+          "start": 389.42,
+          "end": 390.1,
+          "p": 0.651
+        },
+        {
+          "w": " have",
+          "start": 390.1,
+          "end": 390.24,
+          "p": 0.084
+        },
+        {
+          "w": " started",
+          "start": 390.24,
+          "end": 390.74,
+          "p": 0.996
+        },
+        {
+          "w": " at",
+          "start": 390.74,
+          "end": 391.2,
+          "p": 0.999
+        },
+        {
+          "w": " this",
+          "start": 391.2,
+          "end": 391.86,
+          "p": 0.999
+        },
+        {
+          "w": " point",
+          "start": 391.86,
+          "end": 392.16,
+          "p": 0.999
+        },
+        {
+          "w": " over",
+          "start": 392.16,
+          "end": 392.46,
+          "p": 0.996
+        },
+        {
+          "w": " here",
+          "start": 392.46,
+          "end": 392.78,
+          "p": 0.999
+        },
+        {
+          "w": " right",
+          "start": 392.78,
+          "end": 393.12,
+          "p": 0.665
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "start": 393.12,
+      "end": 400.56,
+      "text": "now imagine if you try gradient descent again but this time you choose a different starting point",
+      "words": [
+        {
+          "w": " now",
+          "start": 393.12,
+          "end": 394.34,
+          "p": 0.859
+        },
+        {
+          "w": " imagine",
+          "start": 394.34,
+          "end": 395.28,
+          "p": 0.976
+        },
+        {
+          "w": " if",
+          "start": 395.28,
+          "end": 395.56,
+          "p": 0.999
+        },
+        {
+          "w": " you",
+          "start": 395.56,
+          "end": 395.68,
+          "p": 1.0
+        },
+        {
+          "w": " try",
+          "start": 395.68,
+          "end": 396.02,
+          "p": 0.958
+        },
+        {
+          "w": " gradient",
+          "start": 396.02,
+          "end": 396.48,
+          "p": 0.978
+        },
+        {
+          "w": " descent",
+          "start": 396.48,
+          "end": 396.8,
+          "p": 0.997
+        },
+        {
+          "w": " again",
+          "start": 396.8,
+          "end": 397.06,
+          "p": 0.998
+        },
+        {
+          "w": " but",
+          "start": 397.06,
+          "end": 397.98,
+          "p": 0.989
+        },
+        {
+          "w": " this",
+          "start": 397.98,
+          "end": 398.18,
+          "p": 1.0
+        },
+        {
+          "w": " time",
+          "start": 398.18,
+          "end": 398.48,
+          "p": 1.0
+        },
+        {
+          "w": " you",
+          "start": 398.48,
+          "end": 398.78,
+          "p": 0.998
+        },
+        {
+          "w": " choose",
+          "start": 398.78,
+          "end": 399.16,
+          "p": 1.0
+        },
+        {
+          "w": " a",
+          "start": 399.16,
+          "end": 399.38,
+          "p": 1.0
+        },
+        {
+          "w": " different",
+          "start": 399.38,
+          "end": 399.82,
+          "p": 1.0
+        },
+        {
+          "w": " starting",
+          "start": 399.82,
+          "end": 400.22,
+          "p": 1.0
+        },
+        {
+          "w": " point",
+          "start": 400.22,
+          "end": 400.56,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "start": 400.56,
+      "end": 406.3,
+      "text": "by choosing parameters that place your starting point just a couple steps to the right over here",
+      "words": [
+        {
+          "w": " by",
+          "start": 400.56,
+          "end": 401.18,
+          "p": 0.999
+        },
+        {
+          "w": " choosing",
+          "start": 401.18,
+          "end": 401.54,
+          "p": 1.0
+        },
+        {
+          "w": " parameters",
+          "start": 401.54,
+          "end": 402.08,
+          "p": 1.0
+        },
+        {
+          "w": " that",
+          "start": 402.08,
+          "end": 402.44,
+          "p": 1.0
+        },
+        {
+          "w": " place",
+          "start": 402.44,
+          "end": 402.66,
+          "p": 0.997
+        },
+        {
+          "w": " your",
+          "start": 402.66,
+          "end": 402.84,
+          "p": 0.996
+        },
+        {
+          "w": " starting",
+          "start": 402.84,
+          "end": 403.14,
+          "p": 1.0
+        },
+        {
+          "w": " point",
+          "start": 403.14,
+          "end": 403.42,
+          "p": 0.979
+        },
+        {
+          "w": " just",
+          "start": 403.42,
+          "end": 404.12,
+          "p": 0.999
+        },
+        {
+          "w": " a",
+          "start": 404.12,
+          "end": 404.3,
+          "p": 1.0
+        },
+        {
+          "w": " couple",
+          "start": 404.3,
+          "end": 404.58,
+          "p": 1.0
+        },
+        {
+          "w": " steps",
+          "start": 404.58,
+          "end": 404.84,
+          "p": 0.991
+        },
+        {
+          "w": " to",
+          "start": 404.84,
+          "end": 405.1,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 405.1,
+          "end": 405.14,
+          "p": 1.0
+        },
+        {
+          "w": " right",
+          "start": 405.14,
+          "end": 405.44,
+          "p": 1.0
+        },
+        {
+          "w": " over",
+          "start": 405.44,
+          "end": 405.92,
+          "p": 0.999
+        },
+        {
+          "w": " here",
+          "start": 405.92,
+          "end": 406.3,
+          "p": 1.0
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "start": 407.46,
+      "end": 409.72,
+      "text": "if you then repeat the gradient descent again",
+      "words": [
+        {
+          "w": " if",
+          "start": 407.46,
+          "end": 408.1,
+          "p": 0.876
+        },
+        {
+          "w": " you",
+          "start": 408.1,
+          "end": 408.24,
+          "p": 1.0
+        },
+        {
+          "w": " then",
+          "start": 408.24,
+          "end": 408.48,
+          "p": 1.0
+        },
+        {
+          "w": " repeat",
+          "start": 408.48,
+          "end": 408.8,
+          "p": 0.995
+        },
+        {
+          "w": " the",
+          "start": 408.8,
+          "end": 409.08,
+          "p": 0.999
+        },
+        {
+          "w": " gradient",
+          "start": 409.08,
+          "end": 409.42,
+          "p": 0.977
+        },
+        {
+          "w": " descent",
+          "start": 409.42,
+          "end": 409.68,
+          "p": 0.58
+        },
+        {
+          "w": " again",
+          "start": 409.68,
+          "end": 409.72,
+          "p": 0.146
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "start": 409.72,
+      "end": 414.02,
+      "text": "descent process, which means you look around, take a little step in the direction of the steepest",
+      "words": [
+        {
+          "w": " descent",
+          "start": 409.72,
+          "end": 409.86,
+          "p": 0.328
+        },
+        {
+          "w": " process,",
+          "start": 409.86,
+          "end": 410.24,
+          "p": 0.892
+        },
+        {
+          "w": " which",
+          "start": 410.54,
+          "end": 411.02,
+          "p": 0.994
+        },
+        {
+          "w": " means",
+          "start": 411.02,
+          "end": 411.32,
+          "p": 0.997
+        },
+        {
+          "w": " you",
+          "start": 411.32,
+          "end": 411.54,
+          "p": 0.981
+        },
+        {
+          "w": " look",
+          "start": 411.54,
+          "end": 411.74,
+          "p": 0.993
+        },
+        {
+          "w": " around,",
+          "start": 411.74,
+          "end": 412.04,
+          "p": 0.999
+        },
+        {
+          "w": " take",
+          "start": 412.18,
+          "end": 412.34,
+          "p": 0.993
+        },
+        {
+          "w": " a",
+          "start": 412.34,
+          "end": 412.52,
+          "p": 0.994
+        },
+        {
+          "w": " little",
+          "start": 412.52,
+          "end": 412.68,
+          "p": 0.998
+        },
+        {
+          "w": " step",
+          "start": 412.68,
+          "end": 412.96,
+          "p": 0.998
+        },
+        {
+          "w": " in",
+          "start": 412.96,
+          "end": 413.16,
+          "p": 0.992
+        },
+        {
+          "w": " the",
+          "start": 413.16,
+          "end": 413.2,
+          "p": 0.964
+        },
+        {
+          "w": " direction",
+          "start": 413.2,
+          "end": 413.52,
+          "p": 0.997
+        },
+        {
+          "w": " of",
+          "start": 413.52,
+          "end": 413.66,
+          "p": 0.632
+        },
+        {
+          "w": " the",
+          "start": 413.66,
+          "end": 413.7,
+          "p": 0.647
+        },
+        {
+          "w": " steepest",
+          "start": 413.7,
+          "end": 414.02,
+          "p": 0.996
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "start": 414.02,
+      "end": 421.9,
+      "text": "descent, so you end up here. Then you again look around, take another step, and so on. And if you",
+      "words": [
+        {
+          "w": " descent,",
+          "start": 414.02,
+          "end": 414.26,
+          "p": 0.957
+        },
+        {
+          "w": " so",
+          "start": 414.56,
+          "end": 415.7,
+          "p": 0.96
+        },
+        {
+          "w": " you",
+          "start": 415.7,
+          "end": 415.92,
+          "p": 0.996
+        },
+        {
+          "w": " end",
+          "start": 415.92,
+          "end": 416.08,
+          "p": 0.994
+        },
+        {
+          "w": " up",
+          "start": 416.08,
+          "end": 416.24,
+          "p": 0.999
+        },
+        {
+          "w": " here.",
+          "start": 416.24,
+          "end": 416.46,
+          "p": 0.995
+        },
+        {
+          "w": " Then",
+          "start": 416.9,
+          "end": 417.38,
+          "p": 0.989
+        },
+        {
+          "w": " you",
+          "start": 417.38,
+          "end": 417.56,
+          "p": 0.929
+        },
+        {
+          "w": " again",
+          "start": 417.56,
+          "end": 417.78,
+          "p": 0.853
+        },
+        {
+          "w": " look",
+          "start": 417.78,
+          "end": 418.12,
+          "p": 0.944
+        },
+        {
+          "w": " around,",
+          "start": 418.12,
+          "end": 418.44,
+          "p": 0.999
+        },
+        {
+          "w": " take",
+          "start": 418.58,
+          "end": 418.86,
+          "p": 0.997
+        },
+        {
+          "w": " another",
+          "start": 418.86,
+          "end": 419.1,
+          "p": 0.998
+        },
+        {
+          "w": " step,",
+          "start": 419.1,
+          "end": 419.5,
+          "p": 0.999
+        },
+        {
+          "w": " and",
+          "start": 419.64,
+          "end": 419.9,
+          "p": 0.999
+        },
+        {
+          "w": " so",
+          "start": 419.9,
+          "end": 420.06,
+          "p": 0.999
+        },
+        {
+          "w": " on.",
+          "start": 420.06,
+          "end": 420.36,
+          "p": 0.999
+        },
+        {
+          "w": " And",
+          "start": 420.88,
+          "end": 421.36,
+          "p": 0.954
+        },
+        {
+          "w": " if",
+          "start": 421.36,
+          "end": 421.7,
+          "p": 0.98
+        },
+        {
+          "w": " you",
+          "start": 421.7,
+          "end": 421.9,
+          "p": 0.998
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "start": 421.9,
+      "end": 427.9,
+      "text": "were to run gradient descent the second time, starting just a couple steps to the right of",
+      "words": [
+        {
+          "w": " were",
+          "start": 421.9,
+          "end": 422.12,
+          "p": 0.998
+        },
+        {
+          "w": " to",
+          "start": 422.12,
+          "end": 422.3,
+          "p": 0.999
+        },
+        {
+          "w": " run",
+          "start": 422.3,
+          "end": 422.62,
+          "p": 0.998
+        },
+        {
+          "w": " gradient",
+          "start": 422.62,
+          "end": 422.96,
+          "p": 0.99
+        },
+        {
+          "w": " descent",
+          "start": 422.96,
+          "end": 423.34,
+          "p": 0.99
+        },
+        {
+          "w": " the",
+          "start": 423.34,
+          "end": 423.96,
+          "p": 0.959
+        },
+        {
+          "w": " second",
+          "start": 423.96,
+          "end": 424.58,
+          "p": 0.991
+        },
+        {
+          "w": " time,",
+          "start": 424.58,
+          "end": 425.06,
+          "p": 1.0
+        },
+        {
+          "w": " starting",
+          "start": 425.16,
+          "end": 425.78,
+          "p": 0.994
+        },
+        {
+          "w": " just",
+          "start": 425.78,
+          "end": 426.42,
+          "p": 0.994
+        },
+        {
+          "w": " a",
+          "start": 426.42,
+          "end": 426.6,
+          "p": 0.999
+        },
+        {
+          "w": " couple",
+          "start": 426.6,
+          "end": 426.82,
+          "p": 1.0
+        },
+        {
+          "w": " steps",
+          "start": 426.82,
+          "end": 427.0,
+          "p": 0.852
+        },
+        {
+          "w": " to",
+          "start": 427.0,
+          "end": 427.28,
+          "p": 0.995
+        },
+        {
+          "w": " the",
+          "start": 427.28,
+          "end": 427.36,
+          "p": 0.999
+        },
+        {
+          "w": " right",
+          "start": 427.36,
+          "end": 427.64,
+          "p": 0.999
+        },
+        {
+          "w": " of",
+          "start": 427.64,
+          "end": 427.9,
+          "p": 0.985
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "start": 427.9,
+      "end": 434.24,
+      "text": "where we did it the first time, then you would end up in a totally different valley, this different",
+      "words": [
+        {
+          "w": " where",
+          "start": 427.9,
+          "end": 428.18,
+          "p": 0.999
+        },
+        {
+          "w": " we",
+          "start": 428.18,
+          "end": 428.32,
+          "p": 0.997
+        },
+        {
+          "w": " did",
+          "start": 428.32,
+          "end": 428.52,
+          "p": 0.999
+        },
+        {
+          "w": " it",
+          "start": 428.52,
+          "end": 428.64,
+          "p": 0.989
+        },
+        {
+          "w": " the",
+          "start": 428.64,
+          "end": 428.7,
+          "p": 0.996
+        },
+        {
+          "w": " first",
+          "start": 428.7,
+          "end": 428.96,
+          "p": 1.0
+        },
+        {
+          "w": " time,",
+          "start": 428.96,
+          "end": 429.28,
+          "p": 1.0
+        },
+        {
+          "w": " then",
+          "start": 429.42,
+          "end": 430.22,
+          "p": 0.997
+        },
+        {
+          "w": " you",
+          "start": 430.22,
+          "end": 430.66,
+          "p": 0.999
+        },
+        {
+          "w": " would",
+          "start": 430.66,
+          "end": 430.78,
+          "p": 0.628
+        },
+        {
+          "w": " end",
+          "start": 430.78,
+          "end": 431.02,
+          "p": 0.999
+        },
+        {
+          "w": " up",
+          "start": 431.02,
+          "end": 431.26,
+          "p": 1.0
+        },
+        {
+          "w": " in",
+          "start": 431.26,
+          "end": 431.44,
+          "p": 0.999
+        },
+        {
+          "w": " a",
+          "start": 431.44,
+          "end": 431.6,
+          "p": 0.999
+        },
+        {
+          "w": " totally",
+          "start": 431.6,
+          "end": 432.02,
+          "p": 0.999
+        },
+        {
+          "w": " different",
+          "start": 432.02,
+          "end": 432.36,
+          "p": 1.0
+        },
+        {
+          "w": " valley,",
+          "start": 432.36,
+          "end": 432.86,
+          "p": 0.934
+        },
+        {
+          "w": " this",
+          "start": 433.04,
+          "end": 433.86,
+          "p": 0.997
+        },
+        {
+          "w": " different",
+          "start": 433.86,
+          "end": 434.24,
+          "p": 0.995
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "start": 434.24,
+      "end": 441.88,
+      "text": "minimum over here on the right. The bottoms of both the first and the second valleys are called",
+      "words": [
+        {
+          "w": " minimum",
+          "start": 434.24,
+          "end": 434.86,
+          "p": 0.398
+        },
+        {
+          "w": " over",
+          "start": 434.86,
+          "end": 435.6,
+          "p": 0.959
+        },
+        {
+          "w": " here",
+          "start": 435.6,
+          "end": 436.0,
+          "p": 0.999
+        },
+        {
+          "w": " on",
+          "start": 436.0,
+          "end": 436.36,
+          "p": 0.981
+        },
+        {
+          "w": " the",
+          "start": 436.36,
+          "end": 436.52,
+          "p": 0.999
+        },
+        {
+          "w": " right.",
+          "start": 436.52,
+          "end": 436.8,
+          "p": 0.998
+        },
+        {
+          "w": " The",
+          "start": 437.34,
+          "end": 437.94,
+          "p": 0.984
+        },
+        {
+          "w": " bottoms",
+          "start": 437.94,
+          "end": 438.52,
+          "p": 0.972
+        },
+        {
+          "w": " of",
+          "start": 438.52,
+          "end": 438.7,
+          "p": 0.899
+        },
+        {
+          "w": " both",
+          "start": 438.7,
+          "end": 439.0,
+          "p": 0.996
+        },
+        {
+          "w": " the",
+          "start": 439.0,
+          "end": 439.28,
+          "p": 0.961
+        },
+        {
+          "w": " first",
+          "start": 439.28,
+          "end": 439.6,
+          "p": 0.905
+        },
+        {
+          "w": " and",
+          "start": 439.6,
+          "end": 440.14,
+          "p": 0.987
+        },
+        {
+          "w": " the",
+          "start": 440.14,
+          "end": 440.34,
+          "p": 0.96
+        },
+        {
+          "w": " second",
+          "start": 440.34,
+          "end": 440.7,
+          "p": 0.998
+        },
+        {
+          "w": " valleys",
+          "start": 440.7,
+          "end": 441.06,
+          "p": 0.96
+        },
+        {
+          "w": " are",
+          "start": 441.06,
+          "end": 441.46,
+          "p": 0.995
+        },
+        {
+          "w": " called",
+          "start": 441.46,
+          "end": 441.88,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "start": 441.88,
+      "end": 448.9,
+      "text": "local minima, because if you start going down the first valley, gradient descent won't lead you to",
+      "words": [
+        {
+          "w": " local",
+          "start": 441.88,
+          "end": 442.66,
+          "p": 0.81
+        },
+        {
+          "w": " minima,",
+          "start": 442.66,
+          "end": 443.28,
+          "p": 0.994
+        },
+        {
+          "w": " because",
+          "start": 443.36,
+          "end": 444.26,
+          "p": 0.998
+        },
+        {
+          "w": " if",
+          "start": 444.26,
+          "end": 444.68,
+          "p": 0.99
+        },
+        {
+          "w": " you",
+          "start": 444.68,
+          "end": 444.82,
+          "p": 0.999
+        },
+        {
+          "w": " start",
+          "start": 444.82,
+          "end": 445.02,
+          "p": 0.958
+        },
+        {
+          "w": " going",
+          "start": 445.02,
+          "end": 445.24,
+          "p": 0.999
+        },
+        {
+          "w": " down",
+          "start": 445.24,
+          "end": 445.58,
+          "p": 1.0
+        },
+        {
+          "w": " the",
+          "start": 445.58,
+          "end": 445.76,
+          "p": 0.971
+        },
+        {
+          "w": " first",
+          "start": 445.76,
+          "end": 446.04,
+          "p": 0.993
+        },
+        {
+          "w": " valley,",
+          "start": 446.04,
+          "end": 446.5,
+          "p": 0.865
+        },
+        {
+          "w": " gradient",
+          "start": 446.7,
+          "end": 447.46,
+          "p": 0.998
+        },
+        {
+          "w": " descent",
+          "start": 447.46,
+          "end": 447.78,
+          "p": 0.998
+        },
+        {
+          "w": " won't",
+          "start": 447.78,
+          "end": 448.3,
+          "p": 0.988
+        },
+        {
+          "w": " lead",
+          "start": 448.3,
+          "end": 448.48,
+          "p": 0.997
+        },
+        {
+          "w": " you",
+          "start": 448.48,
+          "end": 448.72,
+          "p": 0.996
+        },
+        {
+          "w": " to",
+          "start": 448.72,
+          "end": 448.9,
+          "p": 0.993
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "start": 448.9,
+      "end": 455.08,
+      "text": "the second valley. And the same is true if you started going down the second valley, you would",
+      "words": [
+        {
+          "w": " the",
+          "start": 448.9,
+          "end": 448.98,
+          "p": 0.983
+        },
+        {
+          "w": " second",
+          "start": 448.98,
+          "end": 449.4,
+          "p": 0.998
+        },
+        {
+          "w": " valley.",
+          "start": 449.4,
+          "end": 449.68,
+          "p": 0.922
+        },
+        {
+          "w": " And",
+          "start": 450.12,
+          "end": 450.72,
+          "p": 0.946
+        },
+        {
+          "w": " the",
+          "start": 450.72,
+          "end": 450.96,
+          "p": 0.963
+        },
+        {
+          "w": " same",
+          "start": 450.96,
+          "end": 451.2,
+          "p": 1.0
+        },
+        {
+          "w": " is",
+          "start": 451.2,
+          "end": 451.32,
+          "p": 0.986
+        },
+        {
+          "w": " true",
+          "start": 451.32,
+          "end": 451.5,
+          "p": 1.0
+        },
+        {
+          "w": " if",
+          "start": 451.5,
+          "end": 452.02,
+          "p": 0.82
+        },
+        {
+          "w": " you",
+          "start": 452.02,
+          "end": 452.2,
+          "p": 0.999
+        },
+        {
+          "w": " started",
+          "start": 452.2,
+          "end": 452.56,
+          "p": 0.856
+        },
+        {
+          "w": " going",
+          "start": 452.56,
+          "end": 452.84,
+          "p": 0.999
+        },
+        {
+          "w": " down",
+          "start": 452.84,
+          "end": 453.3,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 453.3,
+          "end": 453.46,
+          "p": 0.962
+        },
+        {
+          "w": " second",
+          "start": 453.46,
+          "end": 453.82,
+          "p": 0.999
+        },
+        {
+          "w": " valley,",
+          "start": 453.82,
+          "end": 454.2,
+          "p": 0.974
+        },
+        {
+          "w": " you",
+          "start": 454.4,
+          "end": 454.96,
+          "p": 0.997
+        },
+        {
+          "w": " would",
+          "start": 454.96,
+          "end": 455.08,
+          "p": 0.631
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "start": 455.08,
+      "end": 462.24,
+      "text": "stay in that second minimum and not find your way into the first local minimum. So this is an",
+      "words": [
+        {
+          "w": " stay",
+          "start": 455.08,
+          "end": 455.46,
+          "p": 0.996
+        },
+        {
+          "w": " in",
+          "start": 455.46,
+          "end": 455.72,
+          "p": 0.976
+        },
+        {
+          "w": " that",
+          "start": 455.72,
+          "end": 455.94,
+          "p": 0.995
+        },
+        {
+          "w": " second",
+          "start": 455.94,
+          "end": 456.38,
+          "p": 0.999
+        },
+        {
+          "w": " minimum",
+          "start": 456.38,
+          "end": 456.76,
+          "p": 0.996
+        },
+        {
+          "w": " and",
+          "start": 456.76,
+          "end": 457.2,
+          "p": 0.896
+        },
+        {
+          "w": " not",
+          "start": 457.2,
+          "end": 457.42,
+          "p": 0.999
+        },
+        {
+          "w": " find",
+          "start": 457.42,
+          "end": 457.72,
+          "p": 0.999
+        },
+        {
+          "w": " your",
+          "start": 457.72,
+          "end": 457.86,
+          "p": 0.998
+        },
+        {
+          "w": " way",
+          "start": 457.86,
+          "end": 458.06,
+          "p": 1.0
+        },
+        {
+          "w": " into",
+          "start": 458.06,
+          "end": 458.34,
+          "p": 0.995
+        },
+        {
+          "w": " the",
+          "start": 458.34,
+          "end": 458.52,
+          "p": 0.999
+        },
+        {
+          "w": " first",
+          "start": 458.52,
+          "end": 458.86,
+          "p": 0.999
+        },
+        {
+          "w": " local",
+          "start": 458.86,
+          "end": 459.34,
+          "p": 0.993
+        },
+        {
+          "w": " minimum.",
+          "start": 459.34,
+          "end": 459.88,
+          "p": 0.997
+        },
+        {
+          "w": " So",
+          "start": 460.92,
+          "end": 461.52,
+          "p": 0.991
+        },
+        {
+          "w": " this",
+          "start": 461.52,
+          "end": 461.92,
+          "p": 0.885
+        },
+        {
+          "w": " is",
+          "start": 461.92,
+          "end": 462.06,
+          "p": 0.999
+        },
+        {
+          "w": " an",
+          "start": 462.06,
+          "end": 462.24,
+          "p": 0.999
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "start": 462.24,
+      "end": 464.22,
+      "text": "interesting property of the gradient descent process.",
+      "words": [
+        {
+          "w": " interesting",
+          "start": 462.24,
+          "end": 462.6,
+          "p": 0.999
+        },
+        {
+          "w": " property",
+          "start": 462.6,
+          "end": 463.06,
+          "p": 0.998
+        },
+        {
+          "w": " of",
+          "start": 463.06,
+          "end": 463.46,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 463.46,
+          "end": 463.54,
+          "p": 0.987
+        },
+        {
+          "w": " gradient",
+          "start": 463.54,
+          "end": 463.84,
+          "p": 0.991
+        },
+        {
+          "w": " descent",
+          "start": 463.84,
+          "end": 464.2,
+          "p": 0.976
+        },
+        {
+          "w": " process.",
+          "start": 464.2,
+          "end": 464.22,
+          "p": 0.002
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "start": 464.24,
+      "end": 475.44,
+      "text": "So in this video, you saw how gradient descent helps you go downhill. In the next video, let's look at the",
+      "words": [
+        {
+          "w": " So",
+          "start": 464.24,
+          "end": 465.26,
+          "p": 0.009
+        },
+        {
+          "w": " in",
+          "start": 465.26,
+          "end": 468.26,
+          "p": 0.83
+        },
+        {
+          "w": " this",
+          "start": 468.26,
+          "end": 468.48,
+          "p": 0.996
+        },
+        {
+          "w": " video,",
+          "start": 468.48,
+          "end": 468.9,
+          "p": 0.998
+        },
+        {
+          "w": " you",
+          "start": 469.0,
+          "end": 469.26,
+          "p": 0.991
+        },
+        {
+          "w": " saw",
+          "start": 469.26,
+          "end": 469.6,
+          "p": 0.996
+        },
+        {
+          "w": " how",
+          "start": 469.6,
+          "end": 470.06,
+          "p": 0.991
+        },
+        {
+          "w": " gradient",
+          "start": 470.06,
+          "end": 470.52,
+          "p": 0.898
+        },
+        {
+          "w": " descent",
+          "start": 470.52,
+          "end": 470.84,
+          "p": 0.997
+        },
+        {
+          "w": " helps",
+          "start": 470.84,
+          "end": 471.32,
+          "p": 0.992
+        },
+        {
+          "w": " you",
+          "start": 471.32,
+          "end": 471.62,
+          "p": 0.996
+        },
+        {
+          "w": " go",
+          "start": 471.62,
+          "end": 471.82,
+          "p": 0.987
+        },
+        {
+          "w": " downhill.",
+          "start": 471.82,
+          "end": 472.44,
+          "p": 0.962
+        },
+        {
+          "w": " In",
+          "start": 472.88,
+          "end": 473.52,
+          "p": 0.987
+        },
+        {
+          "w": " the",
+          "start": 473.52,
+          "end": 473.74,
+          "p": 0.996
+        },
+        {
+          "w": " next",
+          "start": 473.74,
+          "end": 474.08,
+          "p": 0.999
+        },
+        {
+          "w": " video,",
+          "start": 474.08,
+          "end": 474.38,
+          "p": 0.998
+        },
+        {
+          "w": " let's",
+          "start": 474.56,
+          "end": 474.88,
+          "p": 0.993
+        },
+        {
+          "w": " look",
+          "start": 474.88,
+          "end": 475.06,
+          "p": 0.996
+        },
+        {
+          "w": " at",
+          "start": 475.06,
+          "end": 475.24,
+          "p": 0.999
+        },
+        {
+          "w": " the",
+          "start": 475.24,
+          "end": 475.44,
+          "p": 0.991
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "start": 475.44,
+      "end": 482.14,
+      "text": "mathematical expressions that you can implement to make gradient descent work. Let's go on to the next video.",
+      "words": [
+        {
+          "w": " mathematical",
+          "start": 475.44,
+          "end": 475.82,
+          "p": 0.855
+        },
+        {
+          "w": " expressions",
+          "start": 475.82,
+          "end": 476.68,
+          "p": 0.987
+        },
+        {
+          "w": " that",
+          "start": 476.68,
+          "end": 477.14,
+          "p": 0.983
+        },
+        {
+          "w": " you",
+          "start": 477.14,
+          "end": 477.38,
+          "p": 0.998
+        },
+        {
+          "w": " can",
+          "start": 477.38,
+          "end": 477.6,
+          "p": 0.999
+        },
+        {
+          "w": " implement",
+          "start": 477.6,
+          "end": 478.12,
+          "p": 0.999
+        },
+        {
+          "w": " to",
+          "start": 478.12,
+          "end": 478.74,
+          "p": 0.986
+        },
+        {
+          "w": " make",
+          "start": 478.74,
+          "end": 478.92,
+          "p": 0.997
+        },
+        {
+          "w": " gradient",
+          "start": 478.92,
+          "end": 479.32,
+          "p": 0.991
+        },
+        {
+          "w": " descent",
+          "start": 479.32,
+          "end": 479.66,
+          "p": 0.987
+        },
+        {
+          "w": " work.",
+          "start": 479.66,
+          "end": 480.1,
+          "p": 0.993
+        },
+        {
+          "w": " Let's",
+          "start": 480.46,
+          "end": 481.1,
+          "p": 0.996
+        },
+        {
+          "w": " go",
+          "start": 481.1,
+          "end": 481.18,
+          "p": 0.996
+        },
+        {
+          "w": " on",
+          "start": 481.18,
+          "end": 481.44,
+          "p": 0.972
+        },
+        {
+          "w": " to",
+          "start": 481.44,
+          "end": 481.58,
+          "p": 0.992
+        },
+        {
+          "w": " the",
+          "start": 481.58,
+          "end": 481.74,
+          "p": 0.999
+        },
+        {
+          "w": " next",
+          "start": 481.74,
+          "end": 481.96,
+          "p": 0.999
+        },
+        {
+          "w": " video.",
+          "start": 481.96,
+          "end": 482.14,
+          "p": 0.995
+        }
+      ]
+    }
+  ]
+}

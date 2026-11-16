@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "stage": "translate",
+    "language": "Urdu",
+    "language_code": "urd_Arab",
+    "model": "facebook/nllb-200-distilled-600M",
+    "device": "cpu",
+    "config_hash": "e7c452e453",
+    "condition": "asr_natural",
+    "time": "2026-11-15 18:16:24"
+  },
+  "chunks": [
+    {
+      "index": 0,
+      "english_notes": "Gradient Descent can be used to find the cost function j of w.",
+      "translation": "گریڈیئنٹ ڈیسنٹ کا استعمال w کے اخراجات فنکشن j کو تلاش کرنے کے لئے کیا جا سکتا ہے."
+    },
+    {
+      "index": 1,
+      "english_notes": "w and wn.",
+      "translation": "و و و و و و و"
+    },
+    {
+      "index": 2,
+      "english_notes": "Gradient descent, the initial values are the same as the initial values.",
+      "translation": "گریڈیئنٹ ڈیسنسی، ابتدائی اقدار ابتدائی اقدار کے برابر ہیں."
+    },
+    {
+      "index": 3,
+      "english_notes": "The Gradient-Descent rabe is a neural network model that is trained on a linear regression model.",
+      "translation": "گریڈیئنٹ ڈیسنٹ ریب ایک اعصابی نیٹ ورک ماڈل ہے جو لکیری رجعت ماڈل پر تربیت یافتہ ہے۔"
+    },
+    {
+      "index": 4,
+      "english_notes": "Look around and ask yourself, if I were to take a tiny little baby step in one direction, and I want to go downhill as quickly as possible toward one of these valleys, what direction do I choose to take that baby step?",
+      "translation": "اپنے ارد گرد دیکھو اور اپنے آپ سے پوچھو، اگر میں ایک سمت میں ایک چھوٹا سا چھوٹا سا بچہ قدم اٹھاؤں، اور میں جتنی جلدی ممکن ہو اِن وادیوں میں سے کسی ایک کی طرف نیچے جانا چاہتا ہوں، تو میں کس سمت میں یہ چھوٹا سا قدم اٹھاؤں؟"
+    },
+    {
+      "index": 5,
+      "english_notes": "gradient descent is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient descent that is a property of gradient",
+      "translation": "گرادیئنٹ ڈیسنٹ گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیینٹ کی ایک پراپرٹی ہے جو گرادیئنٹ کی ایک پراپرٹی ہے جو گرادیونٹ کی ایک پراپرٹی ہے"
+    },
+    {
+      "index": 6,
+      "english_notes": "gradient descent can help you achieve.",
+      "translation": "گرڈینٹ ڈسکاؤنٹ آپ کو حاصل کرنے میں مدد کر سکتا ہے."
+    },
+    {
+      "index": 7,
+      "english_notes": "This is a simple example of how gradient descent works.",
+      "translation": "یہ ایک سادہ مثال ہے کہ کس طرح گرڈینٹ ڈسکاؤنٹ کام کرتا ہے."
+    }
+  ],
+  "notes": "گریڈیئنٹ ڈیسنٹ کا استعمال w کے اخراجات فنکشن j کو تلاش کرنے کے لئے کیا جا سکتا ہے.\n\nو و و و و و و\n\nگریڈیئنٹ ڈیسنسی، ابتدائی اقدار ابتدائی اقدار کے برابر ہیں.\n\nگریڈیئنٹ ڈیسنٹ ریب ایک اعصابی نیٹ ورک ماڈل ہے جو لکیری رجعت ماڈل پر تربیت یافتہ ہے۔\n\nاپنے ارد گرد دیکھو اور اپنے آپ سے پوچھو، اگر میں ایک سمت میں ایک چھوٹا سا چھوٹا سا بچہ قدم اٹھاؤں، اور میں جتنی جلدی ممکن ہو اِن وادیوں میں سے کسی ایک کی طرف نیچے جانا چاہتا ہوں، تو میں کس سمت میں یہ چھوٹا سا قدم اٹھاؤں؟\n\nگرادیئنٹ ڈیسنٹ گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ ڈیسنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیئنٹ کی ایک خصوصیت ہے جو گرادیینٹ کی ایک پراپرٹی ہے جو گرادیئنٹ کی ایک پراپرٹی ہے جو گرادیونٹ کی ایک پراپرٹی ہے\n\nگرڈینٹ ڈسکاؤنٹ آپ کو حاصل کرنے میں مدد کر سکتا ہے.\n\nیہ ایک سادہ مثال ہے کہ کس طرح گرڈینٹ ڈسکاؤنٹ کام کرتا ہے."
+}
