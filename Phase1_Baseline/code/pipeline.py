@@ -7,8 +7,12 @@ from pathlib import Path
 
 import yaml
 
-ROOT = Path(__file__).parent
-CONFIG_PATH = ROOT / "config.yaml"
+ROOT = Path(__file__).resolve().parents[1]
+
+CONFIG_PATH = ROOT / "config" / "config.yaml"
+
+DATA_ROOT = ROOT / "data"
+RESULTS_ROOT = ROOT / "results"
 
 CFG = yaml.safe_load(
     CONFIG_PATH.read_text(encoding="utf-8")
@@ -20,17 +24,14 @@ _SUMMARISER = None
 _TRANSLATOR = None
 
 def lecture_dir(lecture):
-
-    directory = ROOT / "data" / lecture
+    directory = DATA_ROOT / lecture
     directory.mkdir(parents=True, exist_ok=True)
-
     return directory
 
+
 def cond_dir(lecture, condition):
-
-    directory = lecture_dir(lecture) / condition
+    directory = RESULTS_ROOT / lecture / condition
     directory.mkdir(parents=True, exist_ok=True)
-
     return directory
 
 def save_json(path, obj):
